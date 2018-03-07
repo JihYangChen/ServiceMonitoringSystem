@@ -37,10 +37,6 @@ router.get('/', function(req, res, next) {
     })
 });
 
-router.get('/addHost', function(req, res, next) {
-    hosts.push("www.hackmd.io");
-});
-
 function setHostStatus(host, newStatus) {
     if (host.status != newStatus)
         host.statusStartTime = Date();
