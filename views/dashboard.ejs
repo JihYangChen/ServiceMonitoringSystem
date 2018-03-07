@@ -461,7 +461,7 @@
     <script>
       $(document).ready(function(){
         $("#addHostBtn").click(function(){
-          $.post("/host/addHost",
+          $.post("/hostManagement/addHost",
           { 
             displayName: $("#displayName").val(), 
             host: $("#host").val(), 
@@ -479,7 +479,7 @@
       });
       
       $(document).on('click', '.deleteHostBtn', function(){
-        $.post("/host/deleteHost",
+        $.post("/hostManagement/deleteHost",
         { 
           displayName: $(this).val()
         });

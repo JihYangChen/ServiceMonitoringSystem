@@ -4,7 +4,7 @@ var router = express.Router();
 var nmap = require('node-nmap');
 nmap.nmapLocation = "nmap"; //default 
 
-var hosts = require('../hosts');
+var hosts = require('../database/hosts');
 
 router.get('/', function(req, res, next) {
     var cnt = 0;
@@ -12,13 +12,10 @@ router.get('/', function(req, res, next) {
         var quickscan = new nmap.QuickScan(host.host);
 
         quickscan.on('complete', function(data){
-            // console.log(data);
-            if (data.length != 0) {
+            if (data.length != 0)
                 setHostStatus(host, "UP");
-            }
-            else {
+            else 
                 setHostStatus(host, "DOWN");
-            }
 
             cnt++;
             if (cnt == hosts.length)
@@ -26,7 +23,6 @@ router.get('/', function(req, res, next) {
         });
         
         quickscan.on('error', function(error){
-            // console.log(error);
             setHostStatus(host, "DOWN");
 
             cnt++;
