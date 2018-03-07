@@ -223,11 +223,12 @@
                             <table id="datatable" class="table table-hover">
                                 <thead>
                                     <tr>
-                                    <th>Host</th>
-                                    <th>Domain Name / IP Address</th>
-                                    <th>Status</th>
-                                    <th>Last Check</th>
-                                    <th>Duration</th>
+                                      <th>Host</th>
+                                      <th>Domain Name / IP Address</th>
+                                      <th>Status</th>
+                                      <th>Last Check</th>
+                                      <th>Duration</th>
+                                      <th>Delete Host</th>
                                     </tr>
                                 </thead>
 
@@ -239,9 +240,11 @@
                                         <td>
                                           <% if (hosts[host].status === "UP"){ %>
                                             <i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> UP
-                                          <% } else {%>
-                                          <i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> DOWN
-                                          <% } %>
+                                          <% } else if (hosts[host].status === "DOWN") {%>
+                                            <i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> DOWN
+                                          <% } else { %>
+                                            <i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading
+                                          <% }%>
                                         </td>
                                         <td><%= new Date(hosts[host].lastCheckTime).toLocaleString() %></td>
                                         <td><%
@@ -266,6 +269,7 @@
                                             %>
                                             <%= duration %>
                                         </td>
+                                        <td><button type="button" value="<%= hosts[host].displayName %>" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
                                     </tr>
                                   <% } %>
                                 </tbody>
@@ -307,33 +311,18 @@
                     <br>
 
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hostType">Add host by... <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="displayName">Display Host Name <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <div id="gender" class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                    <input type="radio" name="gender" value="domainName"> &nbsp; Domain Name &nbsp;
-                                </label>
-                                <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                    <input type="radio" name="gender" value="IP"> IP Address
-                                </label>
-                            </div>
+                            <input id="displayName" class="form-control col-md-7 col-xs-12" name="hostName" required="required" type="text" placeholder="e.g. My-PC">
                         </div>
                     </div>
 
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Host Name <span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Domain Name / IP Address <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="name" class="form-control col-md-7 col-xs-12" name="hostName" required="required" type="text">
-                        </div>
-                    </div>
-
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="domainName">Domain Name <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="name" class="form-control col-md-7 col-xs-12" name="hostName" required="required" type="text" placeholder="e.g. www.google.com">
+                            <input id="host" class="form-control col-md-7 col-xs-12" name="host" required="required" type="text" placeholder="e.g. www.google.com">
                         </div>
                     </div>
                     
@@ -341,7 +330,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success">Add Host</button>
+                <button type="button" id="addHostBtn" class="btn btn-success">Add Host</button>
             </div>
             </div>
         </div>
@@ -429,16 +418,20 @@
                     <td>${ getStatusTd(hosts[host].status) }</td>
                     <td>${ new Date(hosts[host].lastCheckTime).toLocaleString() }</td>
                     <td>${ getTimeDuration(new Date(hosts[host].statusStartTime).getTime()) }</td>
+                    <td><button type="button" value="${ hosts[host].displayName }" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
                 </tr> `;
         }
         $("#tableContent").html( tableContentStr );
+        $("td").css("vertical-align","middle");
       }
       
       function getStatusTd(status) {
         if (status === "UP")
           return `<i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> UP`
-        else
+        else if(status === "DOWN")
           return `<i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> DOWN`
+        else
+          return `<i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading`
       }
 
       function getTimeDuration(startTime) {
@@ -461,6 +454,49 @@
 
         var duration = days + "d, " + hours + "h, " + minutes + "m, " + seconds + "s.";
         return duration;
+      }
+    </script>
+
+    <!-- Host Management -->
+    <script>
+      $(document).ready(function(){
+        $("#addHostBtn").click(function(){
+          $.post("/host/addHost",
+          { 
+            displayName: $("#displayName").val(), 
+            host: $("#host").val(), 
+            status: "Unchecked", 
+            statusStartTime: Date(), 
+            lastCheckTime: Date()
+          });
+          addHost($("#displayName").val(), $("#host").val());
+          $('#exampleModal').modal('toggle');
+          $("#displayName").val('');
+          $("#host").val('');
+        });
+
+        $("td").css("vertical-align","middle");
+      });
+      
+      $(document).on('click', '.deleteHostBtn', function(){
+        $.post("/host/deleteHost",
+        { 
+          displayName: $(this).val()
+        });
+        $(this).parent().parent().remove();
+      });
+
+      function addHost(displayName, host) {
+        $("#tableContent").append(`
+                  <tr>
+                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;${ displayName }</td>
+                    <td>${ host }</td>
+                    <td><i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading</td>
+                    <td>${ new Date().toLocaleString() }</td>
+                    <td>${ getTimeDuration(new Date().getTime()) }</td>
+                    <td><button type="button" value="${ displayName }" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
+                  </tr> `);
+        $("td").css("vertical-align","middle");
       }
     </script>
 
