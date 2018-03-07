@@ -4,23 +4,48 @@ var router = express.Router();
 var nmap = require('node-nmap');
 nmap.nmapLocation = "nmap"; //default 
 
+var hosts = require('../hosts');
+
 router.get('/', function(req, res, next) {
-    //    Accepts array or comma separated string of NMAP acceptable hosts 
-    var host = ["", "www.google.com.tw"];
-    
-    for(i=0; i<2; i++) {
-        var quickscan = new nmap.QuickScan(host[i]);
-        
+    var cnt = 0;
+    hosts.forEach( (host) => {
+        var quickscan = new nmap.QuickScan(host.host);
+
         quickscan.on('complete', function(data){
-            console.log(data[0].hostname);
-            console.log(data);
+            // console.log(data);
+            if (data.length != 0) {
+                setHostStatus(host, "UP");
+            }
+            else {
+                setHostStatus(host, "DOWN");
+            }
+
+            cnt++;
+            if (cnt == hosts.length)
+                res.send(hosts);
         });
         
         quickscan.on('error', function(error){
-            console.log(i);
-            console.log(error);
+            // console.log(error);
+            setHostStatus(host, "DOWN");
+
+            cnt++;
+            if (cnt == hosts.length)
+                res.send(hosts);
         });
-    }
+
+    })
 });
+
+router.get('/addHost', function(req, res, next) {
+    hosts.push("www.hackmd.io");
+});
+
+function setHostStatus(host, newStatus) {
+    if (host.status != newStatus)
+        host.statusStartTime = Date();
+    host.status = newStatus;
+    host.lastCheckTime = Date();
+}
 
 module.exports = router;

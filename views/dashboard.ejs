@@ -249,60 +249,50 @@
                             </ul>
                             <div class="clearfix"></div>
                         </div>
+                        
                         <div class="x_content">
                             <table id="datatable" class="table table-hover">
                                 <thead>
                                     <tr>
                                     <th>Host</th>
-                                    <th>IP Address</th>
-                                    <th>Service</th>
+                                    <th>Domain Name / IP Address</th>
                                     <th>Status</th>
                                     <th>Last Check</th>
                                     <th>Duration</th>
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody id="tableContent">
+                                  <% for (host in hosts) { %>
                                     <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;Office-NAS</td>
-                                        <td>192.168.2.5</td>
-                                        <td>PING</td>
-                                        <td>OK</td>
-                                        <td>2011/04/25</td>
-                                        <td>10day 2hr 30min 6sec</td>
+                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<%= hosts[host].displayName %></td>
+                                        <td><%= hosts[host].host %></td>
+                                        <td><%= hosts[host].status %></td>
+                                        <td><%= new Date(hosts[host].lastCheckTime).toLocaleString() %></td>
+                                        <td><%
+                                              var interval = Date.now() - new Date(hosts[host].statusStartTime).getTime();
+  
+                                              var msecPerMinute = 1000 * 60;  
+                                              var msecPerHour = msecPerMinute * 60;  
+                                              var msecPerDay = msecPerHour * 24;  
+
+                                              var days = Math.floor(interval / msecPerDay );  
+                                              interval = interval - (days * msecPerDay );  
+
+                                              var hours = Math.floor(interval / msecPerHour );  
+                                              interval = interval - (hours * msecPerHour );  
+
+                                              var minutes = Math.floor(interval / msecPerMinute );  
+                                              interval = interval - (minutes * msecPerMinute );  
+
+                                              var seconds = Math.floor(interval / 1000 );  
+
+                                              var duration = days + "d, " + hours + "h, " + minutes + "m, " + seconds + "s.";  
+                                            %>
+                                            <%= duration %>
+                                        </td>
                                     </tr>
-                                    <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;Home-PC</td>
-                                        <td>161.43.26.110</td>
-                                        <td>PING</td>
-                                        <td>OK</td>
-                                        <td>2011/04/25</td>
-                                        <td>10day 2hr 30min 6sec</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;Lab-LearningMC</td>
-                                        <td>140.124.244.25</td>
-                                        <td>PING</td>
-                                        <td>OK</td>
-                                        <td>2011/04/25</td>
-                                        <td>10day 2hr 30min 6sec</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;MY_LAPTOP</td>
-                                        <td>66.36.124.22</td>
-                                        <td>PING</td>
-                                        <td>OK</td>
-                                        <td>2011/04/25</td>
-                                        <td>10day 2hr 30min 6sec</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;Office-PC</td>
-                                        <td>192.168.2.13</td>
-                                        <td>PING</td>
-                                        <td>OK</td>
-                                        <td>2011/04/25</td>
-                                        <td>10day 2hr 30min 6sec</td>
-                                    </tr>
+                                  <% } %>
                                 </tbody>
                             </table>
                         </div>
@@ -441,6 +431,25 @@
 
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
-	
+
+    <!-- Socket.io -->
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost:3000');
+      socket.on('updateHost', function (data) {
+        console.log(data);
+        updateTable();
+      });
+    </script>
+
+    <!-- Update Data -->
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+      function updateTable() {
+        $("#tableContent").html( "<span class='red'>Hello <b>Again</b></span>" );
+        
+      }
+    </script>
+
   </body>
 </html>
