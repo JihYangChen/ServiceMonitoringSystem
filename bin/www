@@ -20,6 +20,14 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server); // add this line
+var hosts = require('../hosts');
+
+setInterval( function(){
+  var request = require('request');
+  request('http://127.0.0.1:3000/serviceStatus');
+  io.emit('updateHost', hosts);
+}, 5000);
 
 /**
  * Listen on provided port, on all network interfaces.
