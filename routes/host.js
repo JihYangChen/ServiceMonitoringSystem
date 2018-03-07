@@ -12,7 +12,6 @@ router.post('/deleteHost', function(req, res, next) {
     for (i in hosts) {
         if (hosts[i].displayName === req.body.displayName) {
             hosts.splice(i, 1);
-            console.log(hosts);
         }
     }
 });
