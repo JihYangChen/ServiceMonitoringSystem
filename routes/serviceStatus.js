@@ -22,6 +22,7 @@ router.get('/', function(req, res, next) {
                 res.send(hosts);
         });
         
+        
         quickscan.on('error', function(error){
             setHostStatus(host, "DOWN");
 
