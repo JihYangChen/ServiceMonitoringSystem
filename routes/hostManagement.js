@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var hosts = require('../hosts');
+var hosts = require('../database/hosts');
 
 router.post('/addHost', function(req, res, next) {
     hosts.push(req.body);
