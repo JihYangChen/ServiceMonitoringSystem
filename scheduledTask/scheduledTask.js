@@ -1,9 +1,13 @@
 var hosts = require('../database/hosts');
+var request = require('request');
 
 module.exports = function(io) {
     setInterval( function(){
-        var request = require('request');
-        request('http://127.0.0.1:3000/serviceStatus');
-        io.emit('updateHost', hosts);
+        try {
+            request('http://192.168.50.187:3000/api/monitorHostStatus');
+            io.emit('updateHost', hosts);
+        }catch(e){
+            console.log('Error: ' + e)
+        }
     }, 5000);
 };
