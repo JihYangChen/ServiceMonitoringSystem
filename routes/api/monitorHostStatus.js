@@ -1,7 +1,7 @@
-const NmapAdapter = require('../../adapters/NmapAdapter');
 var express = require('express');
 var router = express.Router();
 
+const NmapAdapter = require('../../adapters/NmapAdapter');
 var hosts = require('../../database/hosts');
 
 router.get('/', function(req, res, next) {

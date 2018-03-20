@@ -1,11 +1,15 @@
 var hosts = require('../database/hosts');
-var request = require('request');
+
+const NmapAdapter = require('../adapters/NmapAdapter');
+var hosts = require('../database/hosts');
 
 module.exports = function(io) {
     setInterval( function(){
         try {
-            request('http://192.168.50.187:3000/api/monitorHostStatus');
-            io.emit('updateHost', hosts);
+            let nmapAdapter = new NmapAdapter(hosts);
+            nmapAdapter.monitorHosts( () => {
+                io.emit('updateHost', hosts);
+            });
         }catch(e){
             console.log('Error: ' + e)
         }

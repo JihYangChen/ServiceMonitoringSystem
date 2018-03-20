@@ -4,6 +4,11 @@ var router = express.Router();
 var hosts = require('../../database/hosts');
 
 router.post('/addHost', function(req, res, next) {
+    if (!('statusStartTime' in req.body))
+        req.body.statusStartTime = Date();
+    if (!('lastCheckTime' in req.body))
+        req.body.lastCheckTime = Date();
+    
     hosts.push(req.body);
     res.sendStatus(200);
 });
