@@ -231,7 +231,7 @@
                                       <th>Delete Host</th>
                                     </tr>
                                 </thead>
-
+                                
                                 <tbody id="tableContent">
                                   <% for (host in hosts) { %>
                                     <tr>
@@ -246,7 +246,7 @@
                                             <i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading
                                           <% }%>
                                         </td>
-                                        <td><%= new Date(hosts[host].lastCheckTime).toLocaleString() %></td>
+                                        <td><%= new Date(hosts[host].lastCheckTime).toLocaleString('en-US') %></td>
                                         <td><%
                                               var interval = Date.now() - new Date(hosts[host].statusStartTime).getTime();
   
