@@ -238,10 +238,10 @@
                                         <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<%= hosts[host].displayName %></td>
                                         <td><%= hosts[host].host %></td>
                                         <td>
-                                          <% if (hosts[host].status === "UP"){ %>
-                                            <i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> UP
-                                          <% } else if (hosts[host].status === "DOWN") {%>
-                                            <i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> DOWN
+                                          <% if (hosts[host].status === "Up"){ %>
+                                            <i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> Up
+                                          <% } else if (hosts[host].status === "Down") {%>
+                                            <i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> Down
                                           <% } else { %>
                                             <i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading
                                           <% }%>
@@ -426,10 +426,10 @@
       }
       
       function getStatusTd(status) {
-        if (status === "UP")
-          return `<i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> UP`
-        else if(status === "DOWN")
-          return `<i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> DOWN`
+        if (status === "Up")
+          return `<i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> Up`
+        else if(status === "Down")
+          return `<i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> Down`
         else
           return `<i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading`
       }
@@ -461,7 +461,7 @@
     <script>
       $(document).ready(function(){
         $("#addHostBtn").click(function(){
-          $.post("/hostManagement/addHost",
+          $.post("/api/hostManagement/addHost",
           { 
             displayName: $("#displayName").val(), 
             host: $("#host").val(), 
@@ -479,7 +479,7 @@
       });
       
       $(document).on('click', '.deleteHostBtn', function(){
-        $.post("/hostManagement/deleteHost",
+        $.post("/api/hostManagement/deleteHost",
         { 
           displayName: $(this).val()
         });
