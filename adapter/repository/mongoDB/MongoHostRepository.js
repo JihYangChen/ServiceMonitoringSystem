@@ -3,8 +3,24 @@ var HostModel = require('./model/HostModel')
 
 class MongoHostRepository extends IHostRepository {
     async getHosts() {
-        var hosts = await HostModel.find();
-        return hosts;
+        try {
+            let hosts = await HostModel.find();
+            return hosts;
+        } catch(error) {
+            console.log('GetHosts error: ' + error);
+            return 'error';
+        }
+    }
+
+    async addHost(host) {
+        try {
+            let hostModel = new HostModel(host);
+            let newHost = await hostModel.save();
+            return newHost;
+        } catch(error) {
+            console.log('GetHosts error: ' + error);
+            return 'error';
+        }
     }
 }
 
