@@ -1,6 +1,6 @@
 var hosts = require('../database/hosts');
 
-const NmapAdapter = require('../adapters/NmapAdapter');
+const NmapAdapter = require('../adapter/NmapAdapter');
 var hosts = require('../database/hosts');
 
 module.exports = function(io) {

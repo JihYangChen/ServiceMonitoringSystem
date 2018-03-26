@@ -7,3 +7,5 @@ class Host {
         this.lastCheckTime = Date();
     }
 }
+
+module.exports = Host;

@@ -3,6 +3,11 @@ var router = express.Router();
 
 var hosts = require('../../database/hosts');
 
+var GetHostsUseCase = require('../../useCase/hostManagement/GetHostsUseCase');
+var HostRepository = require('../../adapter/repository/mongoDB/MongoHostRepository');
+
+var hostRepository = new HostRepository();
+
 router.post('/addHost', function(req, res, next) {
     if (!('statusStartTime' in req.body))
         req.body.statusStartTime = Date();
@@ -21,9 +26,10 @@ router.post('/deleteHost', function(req, res, next) {
     }
 });
 
-router.get('/getHosts', function(req, res, next) {
+router.get('/getHosts', async function(req, res, next) {
+    let getHostsUseCase = new GetHostsUseCase(hostRepository);
+    let hosts = await getHostsUseCase.execute();
     res.send(hosts);
 });
-
 
 module.exports = router;
