@@ -1,10 +1,10 @@
 class DeleteHostUseCase {
     constructor(hostRepository) {
-        this.hostRepository = hostRepository;
+        this._hostRepository = hostRepository;
     }
 
     async execute(hostId) {
-        return await this.hostRepository.deleteHost(hostId);
+        return await this._hostRepository.deleteHost(hostId);
     }
 }
 

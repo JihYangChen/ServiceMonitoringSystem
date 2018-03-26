@@ -11,6 +11,15 @@ var GetHostsUseCase = require('../../useCase/hostManagement/GetHostsUseCase');
 
 var hostRepository = new HostRepository();
 
+router.get('/getHosts', async function(req, res, next) {
+    let getHostsUseCase = new GetHostsUseCase(hostRepository);
+    let hosts = await getHostsUseCase.execute();
+    if (hosts == 'error')
+        res.sendStatus(500);
+    else
+        res.send(hosts);
+});
+
 router.post('/addHost', async function(req, res, next) {
     let addHostUseCase = new AddHostUseCase(hostRepository);
     let result = await addHostUseCase.execute(req.body);
@@ -27,15 +36,6 @@ router.post('/deleteHost', async function(req, res, next) {
         res.sendStatus(500);
     else
         res.sendStatus(200);
-});
-
-router.get('/getHosts', async function(req, res, next) {
-    let getHostsUseCase = new GetHostsUseCase(hostRepository);
-    let hosts = await getHostsUseCase.execute();
-    if (hosts == 'error')
-        res.sendStatus(500);
-    else
-        res.send(hosts);
 });
 
 module.exports = router;

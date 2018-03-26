@@ -1,6 +1,8 @@
+var Host = require('../../entity/Host')
+
 class AddHostUseCase {
     constructor(hostRepository) {
-        this.hostRepository = hostRepository;
+        this._hostRepository = hostRepository;
     }
 
     async execute(host) {
@@ -9,7 +11,10 @@ class AddHostUseCase {
         if (!('lastCheckTime' in host))
             host.lastCheckTime = Date();
 
-        return await this.hostRepository.addHost(host);
+        let hostInstance = new Host(host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime);
+        let hostObject = {"displayName": hostInstance._displayName, "host": hostInstance._host, "status": hostInstance._status, "statusStartTime": hostInstance._statusStartTime, "lastCheckTime": hostInstance._lastCheckTime};
+
+        return await this._hostRepository.addHost(hostObject);
     }
 }
 

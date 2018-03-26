@@ -1,10 +1,10 @@
 class Host {
-    constructor(displayName, host) {
-        this.displayName = displayName;
-        this.host = host;
-        this.status = status;
-        this.statusStartTime = Date();
-        this.lastCheckTime = Date();
+    constructor(displayName, host, status, statusStartTime, lastCheckTime) {
+        this._displayName = displayName;
+        this._host = host;
+        this._status = status;
+        this._statusStartTime = statusStartTime;
+        this._lastCheckTime = lastCheckTime;
     }
 }
 
