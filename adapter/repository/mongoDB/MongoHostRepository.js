@@ -7,7 +7,7 @@ class MongoHostRepository extends IHostRepository {
             let hosts = await HostModel.find();
             return hosts;
         } catch(error) {
-            console.log('GetHosts error: ' + error);
+            console.log('GetHosts Error: ' + error);
             return 'error';
         }
     }
@@ -18,7 +18,17 @@ class MongoHostRepository extends IHostRepository {
             let newHost = await hostModel.save();
             return newHost;
         } catch(error) {
-            console.log('GetHosts error: ' + error);
+            console.log('AddHosts Error: ' + error);
+            return 'error';
+        }
+    }
+
+    async deleteHost(hostId) {
+        try {
+            await HostModel.findByIdAndRemove(hostId).exec();
+            return 'Delete OK!';
+        } catch(error) {
+            console.log('DeleteHost Error: ' + error);
             return 'error';
         }
     }
