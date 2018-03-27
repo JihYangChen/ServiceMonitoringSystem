@@ -20,7 +20,7 @@ class MonitorHostsUseCase {
         });
 
         // willie: because `hostMonitor.monitorHosts()` would modify hostObjectList programmatically, 
-        // hence we need a truely deep copy for original hosts date here to prevent it from being rather like a new one
+        // hence we need a truely deep copy for original hosts here to prevent it from being rather like a new one
         // or we can just simply pass `hostsInstancesList` as a original parameter of `checkStatusDiff()`
         let originalHosts = JSON.parse(JSON.stringify(hostsObjectList));
 
