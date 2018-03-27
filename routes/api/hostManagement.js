@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var hosts = require('../../database/hosts');
-
 var AddHostUseCase = require('../../useCase/hostManagement/AddHostUseCase');
 var DeleteHostUseCase = require('../../useCase/hostManagement/DeleteHostUseCase');
 var GetHostsUseCase = require('../../useCase/hostManagement/GetHostsUseCase');
@@ -31,7 +29,7 @@ router.post('/addHost', async function(req, res, next) {
 router.post('/deleteHost', async function(req, res, next) {
     let deleteHostUseCase = new DeleteHostUseCase(hostRepository);
     let result = await deleteHostUseCase.execute(req.body.hostId);
-    if (hosts == 'error')
+    if (result == 'error')
         res.sendStatus(500);
     else
         res.sendStatus(200);

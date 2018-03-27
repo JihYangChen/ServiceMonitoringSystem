@@ -24,7 +24,20 @@ class MonitorHostsUseCase {
 
         await this._hostRepository.updateHosts(monitorResultHosts);
 
-        return monitorResultHosts;
+        let statusUpdatedHostIds = this.checkStatusDiff(hostsObjectList, monitorResultHosts);
+        
+        // [[] []]
+        return [monitorResultHosts, statusUpdatedHostIds];
+    }
+
+    checkStatusDiff(originalHosts, monitorResultHosts) {
+        let statusUpdatedHostIds = [];
+        for (let index in originalHosts) {
+            if (originalHosts[index].status != monitorResultHosts[index].status) {
+                statusUpdatedHosts.push(monitorResultHosts[index].id);
+            }
+        }
+        return statusUpdatedHostIds;
     }
 }
 

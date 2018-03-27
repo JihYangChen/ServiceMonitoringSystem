@@ -22,7 +22,7 @@ app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 
-var ScheduledTaskController = require('../scheduledTasksController/ScheduledTaskController');
+var ScheduledTaskController = require('../ScheduledTasksController');
 let scheduledTaskController = new ScheduledTaskController();
 scheduledTaskController.startTask(io);
 
