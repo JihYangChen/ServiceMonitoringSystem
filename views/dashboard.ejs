@@ -211,6 +211,8 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Add Host</a>
                                     </li>
+                                    <li><a href="#" data-toggle="modal" data-target="#addContactModal"><i class="fa fa-plus"></i> Add Contact</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
@@ -235,7 +237,7 @@
                                 <tbody id="tableContent">
                                   <% for (host in hosts) { %>
                                     <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<%= hosts[host].displayName %></td>
+                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="<%= hosts[host].displayName %>" data-h_id="6"><%= hosts[host].displayName %></button></td>
                                         <td><%= hosts[host].host %></td>
                                         <td>
                                           <% if (hosts[host].status === "Up"){ %>
@@ -325,6 +327,31 @@
                             <input id="host" class="form-control col-md-7 col-xs-12" name="host" required="required" type="text" placeholder="e.g. www.google.com">
                         </div>
                     </div>
+
+                    <div id="contact_box">
+                        <!-- <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Contact <span class="required">*</span>
+                            </label>
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                <select id="host" class="form-control col-md-7 col-xs-12" name="host" required="required">
+                                    <option value="">Member 1</option>
+                                    <option value="">Member 2</option>
+                                    <option value="">Member 3</option>
+                                    <option value="">Member 4</option>
+                                    <option value="">Member 5</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-12">
+                                <button type="button" class="btn btn-danger" onclick="deleteContact(this)"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <div class="item form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button class="btn btn-success" type="button" id="addContactBtn">Add Contact</button>
+                        </div>
+                    </div>
                     
                 </form>
             </div>
@@ -336,6 +363,211 @@
         </div>
     </div>
     <!-- /Model -- >
+
+    <!-- addContactModal -->
+    <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="addContactModalLabel" style="display: inline-block;">Add Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal form-label-left" novalidate>
+
+                    <p>Please fill out following information for adding a new Contact.</p>
+                    <br>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="c_name">Contact Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="c_name" class="form-control col-md-7 col-xs-12" name="c_name" required="required" type="text" placeholder="">
+                        </div>
+                    </div>
+                    
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="c_email">E-mail <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="c_email" class="form-control col-md-7 col-xs-12" name="c_email" required="required" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address1
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address1_type" class="form-control  col-md-7 col-xs-12" name="c_address1_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address1_content" class="form-control col-md-7 col-xs-12" name="c_address1_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address2
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address2_type" class="form-control  col-md-7 col-xs-12" name="c_address2_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address2_content" class="form-control col-md-7 col-xs-12" name="c_address2_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address3
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address3_type" class="form-control  col-md-7 col-xs-12" name="c_address3_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address3_content" class="form-control col-md-7 col-xs-12" name="c_address3_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address4
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address4_type" class="form-control  col-md-7 col-xs-12" name="c_address4_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address4_content" class="form-control col-md-7 col-xs-12" name="c_address4_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address5
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address5_type" class="form-control  col-md-7 col-xs-12" name="c_address5_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address5_content" class="form-control col-md-7 col-xs-12" name="c_address5_content" type="text" placeholder="">
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" id="addContactBtn" class="btn btn-success">Add Contact</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /addContactModal -- >
+
+    <!-- viewModal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="viewModalLabel" style="display: inline-block;">Host Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Contact</h4>
+                <div class="well">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Name</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">Member 1</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">E-mail</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">ntut@gmail.com</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Address1</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">Line: xtnej2345</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Address2</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">phone: 0985123543</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Address3</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">Skyoe: sdf_134</p>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="well">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Name</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">Member 2</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">E-mail</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">ntut@yahoo.com.tw</p>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Address1</label>
+                          <div class="col-sm-10">
+                            <p class="form-control-static">phone: 0943563125</p>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /viewModal -- >
 
     <!-- jQuery -->
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
@@ -413,7 +645,7 @@
         for (host in hosts) {
           tableContentStr += `
                 <tr>
-                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;${ hosts[host].displayName }</td>
+                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="${ hosts[host].displayName }" data-h_id="6">${ hosts[host].displayName }</button></td>
                     <td>${ hosts[host].host }</td>
                     <td>${ getStatusTd(hosts[host].status) }</td>
                     <td>${ new Date(hosts[host].lastCheckTime).toLocaleString() }</td>
@@ -498,6 +730,44 @@
                   </tr> `);
         $("td").css("vertical-align","middle");
       }
+    </script>
+
+    <!-- Contact set -->
+    <script>
+      function deleteContact(e){
+        $(e).parents(".item").remove();
+      }
+
+      $("#addContactBtn").click(function(){
+        $("#contact_box").append(`
+          <div class="item form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Contact <span class="required">*</span>
+              </label>
+              <div class="col-md-5 col-sm-5 col-xs-12">
+                  <select id="host" class="form-control col-md-7 col-xs-12" name="host" required="required">
+                      <option value="">Member 1</option>
+                      <option value="">Member 2</option>
+                      <option value="">Member 3</option>
+                      <option value="">Member 4</option>
+                      <option value="">Member 5</option>
+                  </select>
+              </div>
+              <div class="col-md-1 col-sm-1 col-xs-12">
+                  <button type="button" class="btn btn-danger" onclick="deleteContact(this)"><i class="fa fa-close"></i></button>
+              </div>
+          </div>
+        `);
+      });
+
+      $('#viewModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var h_name = button.data('h_name');
+        var h_id = button.data('h_id');
+        console.log(h_name);
+        console.log(h_id);
+        var modal = $(this);
+        modal.find('.modal-title').text(h_name);
+      });
     </script>
 
   </body>
