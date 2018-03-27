@@ -10,10 +10,13 @@ class ScheduledTaskController {
             try {
                 // hosts contains a whole monitored hosts and updatesStatusHostIds, for concept, like [[], []] 
                 let hosts = await monitorHostsUseCase.execute(); 
-                io.emit('updateHost', hosts[0]);
-                var hostIds = hosts[1];
-                if (hostIds.length != 0) {
-                    var notifyContactController = new NotifyContactController(hostIds);
+                let frontEndReloadHosts = hosts[0];
+                io.emit('updateHost', frontEndReloadHosts);
+
+                // prepare for notify contacts
+                let statusUpdatedHostIds = hosts[1];
+                if (statusUpdatedHostIds.length != 0) {
+                    var notifyContactController = new NotifyContactController(statusUpdatedHostIds);
                     notifyContactController.getContactsFromMapAndNewNotifierInstanceToCreateUseCase();
                 }
             } catch(e) { 
