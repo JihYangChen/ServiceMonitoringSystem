@@ -19,13 +19,18 @@ class MonitorHostsUseCase {
             hostsObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime});
         });
 
+        // willie: because `hostMonitor.monitorHosts()` would modify hostObjectList programmatically, 
+        // hence we need a truely deep copy for original hosts date here to prevent it from being rather like a new one
+        // or we can just simply pass `hostsInstancesList` as a original parameter of `checkStatusDiff()`
+        let originalHosts = JSON.parse(JSON.stringify(hostsObjectList));
+
         let monitorResultHosts = [];
         monitorResultHosts = await this._hostMonitor.monitorHosts(hostsObjectList);
 
+        // update MongoDB
         await this._hostRepository.updateHosts(monitorResultHosts);
-
-        let statusUpdatedHostIds = this.checkStatusDiff(hostsObjectList, monitorResultHosts);
         
+        let statusUpdatedHostIds = this.checkStatusDiff(originalHosts, monitorResultHosts);
         // [[] []]
         return [monitorResultHosts, statusUpdatedHostIds];
     }
@@ -34,7 +39,7 @@ class MonitorHostsUseCase {
         let statusUpdatedHostIds = [];
         for (let index in originalHosts) {
             if (originalHosts[index].status != monitorResultHosts[index].status) {
-                statusUpdatedHosts.push(monitorResultHosts[index].id);
+                statusUpdatedHostIds.push(monitorResultHosts[index].id);
             }
         }
         return statusUpdatedHostIds;

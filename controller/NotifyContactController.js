@@ -1,6 +1,5 @@
 
 
-
 class NotifyContactController {
     notifyContactsUseCase = new ...()
     for contacts
