@@ -32,6 +32,17 @@ class MongoHostRepository extends IHostRepository {
             return 'error';
         }
     }
+
+    async updateHosts(hosts) {
+        try {
+            for (let index in hosts) {
+                await HostModel.findByIdAndUpdate(hosts[index].id, hosts[index]).exec();
+            }
+            return 'Update OK!';
+        } catch(error) {
+            return 'error';
+        }
+    }
 }
 
 module.exports = MongoHostRepository;

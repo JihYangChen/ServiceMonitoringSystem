@@ -3,13 +3,12 @@ var router = express.Router();
 
 var hosts = require('../../database/hosts');
 
-var HostRepository = require('../../adapter/repository/mongoDB/MongoHostRepository');
-
 var AddHostUseCase = require('../../useCase/hostManagement/AddHostUseCase');
 var DeleteHostUseCase = require('../../useCase/hostManagement/DeleteHostUseCase');
 var GetHostsUseCase = require('../../useCase/hostManagement/GetHostsUseCase');
 
-var hostRepository = new HostRepository();
+var MongoHostRepository = require('../../adapter/repository/mongoDB/MongoHostRepository');
+var hostRepository = new MongoHostRepository();
 
 router.get('/getHosts', async function(req, res, next) {
     let getHostsUseCase = new GetHostsUseCase(hostRepository);

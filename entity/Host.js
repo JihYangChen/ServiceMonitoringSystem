@@ -1,5 +1,6 @@
 class Host {
-    constructor(displayName, host, status, statusStartTime, lastCheckTime) {
+    constructor(id, displayName, host, status, statusStartTime, lastCheckTime) {
+        this._id = id;
         this._displayName = displayName;
         this._host = host;
         this._status = status;
