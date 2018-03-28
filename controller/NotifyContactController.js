@@ -23,7 +23,6 @@ class NotifyContactController {
         for (let statusUpdatedHostId of this._statusUpdatedHostIds) {
 
             let contacts = await getHostContactsUseCase.execute(statusUpdatedHostId);
-            console.log("Contacts: " + contacts);
 
             let message = "Host: \"" + statusUpdatedHostId + "\" status has changed!!"
             

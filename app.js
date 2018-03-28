@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 
 // Mongoose Setting
 mongoose.connect('mongodb://root:1234@ds119129.mlab.com:19129/hostmonitoringsystemdb');
-// mongoose.set('debug', true)
+mongoose.set('debug', true)
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {

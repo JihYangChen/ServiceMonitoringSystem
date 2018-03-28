@@ -11,6 +11,7 @@ class ScheduledTaskController {
                 // hosts contains a whole monitored hosts and updatesStatusHostIds, for concept, like [[], []] 
                 let hosts = await monitorHostsUseCase.execute(); 
                 let frontEndReloadHosts = hosts[0];
+                io.setMaxListeners(0);
                 io.emit('updateHost', frontEndReloadHosts);
 
                 // prepare for notify contacts
