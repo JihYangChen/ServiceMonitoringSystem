@@ -7,6 +7,12 @@ var GetHostContactsUseCase = require('../useCase/hostManagement/GetHostContactsU
 let getHostContactsUseCase = new GetHostContactsUseCase(hostContactMapRepository);
 var NotifyContactUseCase = require('../useCase/hostMonitor/NotifyContactUseCase');
 
+var EmailNotifier = require('../adapter/notifier/EmailNotifier');
+var FBNotifier = require('../adapter/notifier/FBNotifier');
+var LineNotifier = require('../adapter/notifier/LineNotifier');
+var PhoneNotifier = require('../adapter/notifier/PhoneNotifier');
+var SkypeNotifier = require('../adapter/notifier/SkypeNotifier');
+
 class NotifyContactController {
     constructor(statusUpdatedHostIds) {
         this._statusUpdatedHostIds = statusUpdatedHostIds;
@@ -26,16 +32,16 @@ class NotifyContactController {
                     let notifier;
                     if (notifyAddress.notifyType == 'Email')
                         notifier = new EmailNotifier();
-                    else if(notifyAddress.notifyType == 'Line')
+                    else if (notifyAddress.notifyType == 'Line')
                         notifier = new LineNotifier();
-                    else if(notifyAddress.notifyType == 'Skype')
+                    else if (notifyAddress.notifyType == 'Skype')
                         notifier = new SkypeNotifier();
-                    else if(notifyAddress.notifyType == 'FB')
+                    else if (notifyAddress.notifyType == 'FB')
                         notifier = new FBNotifier();
-                    else if(notifyAddress.notifyType == 'Phone')
+                    else if (notifyAddress.notifyType == 'Phone')
                         notifier = new PhoneNotifier();
 
-                    let notifyContactUseCase = new NotifyContactUseCase(contactRepository, notifier);
+                    let notifyContactUseCase = new NotifyContactUseCase(notifier);
                     notifyContactUseCase.execute(notifyAddress.address, message);
                 }
             }

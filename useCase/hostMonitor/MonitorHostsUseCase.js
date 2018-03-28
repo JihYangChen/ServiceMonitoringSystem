@@ -40,7 +40,6 @@ class MonitorHostsUseCase {
         for (let index in originalHosts) {
             if (originalHosts[index].status != monitorResultHosts[index].status) {
                 statusUpdatedHostIds.push(monitorResultHosts[index].id);
-                console.log("change name:" + monitorResultHosts[index].displayName);
             }
         }
         return statusUpdatedHostIds;

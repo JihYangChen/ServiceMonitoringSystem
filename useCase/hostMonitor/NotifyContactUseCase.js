@@ -4,7 +4,7 @@ class NotifyContactUseCase {
     }
 
     async execute(address, message) {
-        notifier.notify(address, message);
+        this.notifier.notify(address, message);
     }
 }
 
