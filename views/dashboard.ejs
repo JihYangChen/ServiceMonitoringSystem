@@ -839,28 +839,28 @@
 
         var zxc = '';
 
-        // $.get( "/api/hostManagement/getHostContacts/" + h_id, function( data ) {
-        //   console.log('getHostContacts');
-        //   console.log(data);
+        $.get( "/api/hostManagement/getHostContacts/" + h_id, function( data ) {
+          console.log('getHostContacts');
+          console.log(data);
 
-        //   for (c in data) {
-        //     zxc += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
-        //     for (a in data[c].addresses) {
-        //       zxc += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].addresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].addresses[a].address +'</p></div></div>';
-        //     }
-        //     zxc += '</form></div>';
-        //   }
-        // });
-
-        data = new Array({name: '皮可西',addresses: [{notifyType: 'Line',address: 'line123'},{notifyType: 'Phone',address: '0988123456'}]}); //?
-
-        for (c in data) {
-          zxc += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
-          for (a in data[c].addresses) {
-            zxc += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].addresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].addresses[a].address +'</p></div></div>';
+          for (c in data) {
+            zxc += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
+            for (a in data[c].addresses) {
+              zxc += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].addresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].addresses[a].address +'</p></div></div>';
+            }
+            zxc += '</form></div>';
           }
-          zxc += '</form></div>';
-        }
+        });
+
+        // data = new Array({name: '皮可西',addresses: [{notifyType: 'Line',address: 'line123'},{notifyType: 'Phone',address: '0988123456'}]}); //?
+
+        // for (c in data) {
+        //   zxc += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
+        //   for (a in data[c].addresses) {
+        //     zxc += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].addresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].addresses[a].address +'</p></div></div>';
+        //   }
+        //   zxc += '</form></div>';
+        // }
 
 
         var modal = $(this);
@@ -869,24 +869,24 @@
       });
 
       $("#addContactBtn").click(function(){
-        var notifyAddresses = new Array({
+        var notifyAddresses_arr = new Array({
               notifyType: 'email',
               address: $("#c_email").val()
         });
         $(".c_address_type").each(function(){
           if($(this).val() != 'None'){
-            notifyAddresses.push({
+            notifyAddresses_arr.push({
               notifyType: $(this).val(),
               address: $(this).parents('.item').find('.c_address_content').val()
             });
           }
         });
-        console.log(notifyAddresses);
+        console.log(notifyAddresses_arr);
 
         $.post("/api/contactManagement/addContact",
         { 
           name: $("#c_name").val(),
-          notifyAddresses: notifyAddresses
+          notifyAddresses: notifyAddresses_arr
         });
         $('#addContactModal').modal('toggle');
         $("#c_name").val('');
