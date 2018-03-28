@@ -1,4 +1,6 @@
-class MongoContactRepository {
+var IContactRepository = require('../../../useCase/interface/repository/IContactRepository');
+
+class MongoContactRepository extends IContactRepository {
 
 }
 

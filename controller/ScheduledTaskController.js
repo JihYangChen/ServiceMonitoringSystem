@@ -17,7 +17,7 @@ class ScheduledTaskController {
                 let statusUpdatedHostIds = hosts[1];
                 if (statusUpdatedHostIds.length != 0) {
                     var notifyContactController = new NotifyContactController(statusUpdatedHostIds);
-                    notifyContactController.findHostContactsAndNotify();
+                    await notifyContactController.findHostContactsAndNotify();
                 }
             } catch(e) { 
                 console.log('Error: ' + e)
