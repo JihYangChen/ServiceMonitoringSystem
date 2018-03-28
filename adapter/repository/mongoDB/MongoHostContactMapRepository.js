@@ -1,42 +1,17 @@
 var IHostContactMapRepository = require('../../../useCase/interface/repository/IHostContactMapRepository');
-var HostModel = require('./model/HostModel')
+var HostContactsMapModel = require('./model/HostContactsMapModel');
 
 class MongoHostContactMapRepository extends IHostContactMapRepository {
     async getContactsByHostId(hostId) {
-        return [
-            {
-                _id: {
-                    $oid: "5abb2e8a734d1d268cda3b99"
-                },
-                name: "Andy",
-               notifyAddresses: [
-                    {
-                        notifyType: "Email",
-                        address: "t106598014@ntut.org.tw"
-                    },
-                    {
-                        notifyType: "Phone",
-                        address: "0914254789"
-                    }
-                ]
-            }, 
-            {
-                _id: {
-                    $oid: "5abb2ee6734d1d268cda3b9f"
-                },
-                name: "Derek",
-                notifyAddresses: [
-                    {
-                        notifyType: "Email",
-                        address: "t106598022@ntut.org.tw"
-                    },
-                    {
-                        notifyType: "Phone",
-                        address: "0915421458"
-                    }
-                ]
-            }
-        ]
+        console.log("hostid :" + hostId);
+        let contacts = []
+         await HostContactsMapModel.find({hostId:hostId})
+        .populate('contactId')
+        .exec(function(err,hostContactMap){
+            console.log("hostContactMap" + hostContactMap);
+            contacts = hostContactMap;
+        });
+        return contacts;
     }
 }
 
