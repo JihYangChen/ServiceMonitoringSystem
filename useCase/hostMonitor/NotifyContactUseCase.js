@@ -1,18 +1,11 @@
-var Host = require('../../entity/Host');
-
 class NotifyContactUseCase {
-    constructor(hostContactMapRepository) {
-        this._hostContactMapRepository = hostContactMapRepository;
+    constructor(notifier) {
+        this.notifier = notifier;
     }
 
-    async execute(host) {
-        let contacts = [];
-        contacts = await this._hostContactMapRepository.findContactsByHostId(host._id);
-        for (contact in contacts) {
-            let contactInstance = new Contact(contact._id, name, contact.notifyAddresses);
-            
-        }
+    async execute(address, message) {
+        notifier.notify(address, message);
     }
 }
 
-module.exports = MonitorHostsUseCase;
+module.exports = NotifyContactUseCase;
