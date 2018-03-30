@@ -351,22 +351,7 @@
                     </div>
 
                     <div id="contact_box">
-                        <!-- <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Contact <span class="required">*</span>
-                            </label>
-                            <div class="col-md-5 col-sm-5 col-xs-12">
-                                <select id="host" class="form-control col-md-7 col-xs-12" name="host" required="required">
-                                    <option value="">Member 1</option>
-                                    <option value="">Member 2</option>
-                                    <option value="">Member 3</option>
-                                    <option value="">Member 4</option>
-                                    <option value="">Member 5</option>
-                                </select>
-                            </div>
-                            <div class="col-md-1 col-sm-1 col-xs-12">
-                                <button type="button" class="btn btn-danger" onclick="deleteContacts(this)"><i class="fa fa-close"></i></button>
-                            </div>
-                        </div> -->
+                        <!-- Contact select -->
                     </div>
 
                     <div class="item form-group">
@@ -527,62 +512,7 @@
             <div class="modal-body">
                 <h4>Contact</h4>
                 <div id="view_contact_box">
-                  <!-- <div class="well">
-                      <form class="form-horizontal">
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">Member 1</p>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">E-mail</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">ntut@gmail.com</p>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">Address1</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">Line: xtnej2345</p>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">Address2</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">phone: 0985123543</p>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">Address3</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">Skyoe: sdf_134</p>
-                            </div>
-                          </div>
-                      </form>
-                  </div>
-                  <div class="well">
-                      <form class="form-horizontal">
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">Member 2</p>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">E-mail</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">ntut@yahoo.com.tw</p>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-sm-2 control-label">Address1</label>
-                            <div class="col-sm-10">
-                              <p class="form-control-static">phone: 0943563125</p>
-                            </div>
-                          </div>
-                      </form>
-                  </div> -->
+                    <!-- Contact info -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -673,7 +603,7 @@
         for (host in hosts) {
           tableContentStr += `
                 <tr>
-                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="${ hosts[host].displayName }" data-h_id="6">${ hosts[host].displayName }</button></td>
+                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="${ hosts[host].displayName }" data-h_id="${ hosts[host].id }">${ hosts[host].displayName }</button></td>
                     <td>${ hosts[host].host }</td>
                     <td>${ getStatusTd(hosts[host].status) }</td>
                     <td>${ new Date(hosts[host].lastCheckTime).toLocaleString() }</td>
@@ -747,16 +677,23 @@
           });
           console.log('contacts_arr = '+contacts_arr);
 
-          $.post("/api/hostManagement/addHost",
-          { 
-            displayName: $("#displayName").val(), 
-            host: $("#host").val(), 
-            status: "Unchecked", 
-            statusStartTime: Date(), 
-            lastCheckTime: Date(),
-            contacts: contacts_arr
+          $.ajax({
+            method: "POST",
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
+            url: "/api/hostManagement/addHost",
+            data: JSON.stringify(
+              { 
+                displayName: $("#displayName").val(), 
+                host: $("#host").val(), 
+                status: "Unchecked", 
+                statusStartTime: Date(), 
+                lastCheckTime: Date(),
+                contactsId: contacts_arr
+              }
+                  )
           });
-          // addHost($("#displayName").val(), $("#host").val());
+
           $('#exampleModal').modal('toggle');
           $("#displayName").val('');
           $("#host").val('');
@@ -774,33 +711,17 @@
         }).done(function( data ) {
           //
         });
-        // $(this).parent().parent().remove();
       });
-
-      // function addHost(displayName, host) {
-      //   $("#tableContent").append(`
-      //             <tr>
-      //               <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;${ displayName }</td>
-      //               <td>${ host }</td>
-      //               <td><i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading</td>
-      //               <td>${ new Date().toLocaleString() }</td>
-      //               <td>${ getTimeDuration(new Date().getTime()) }</td>
-      //               <td><button type="button" value="${ displayName }" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
-      //             </tr> `);
-      //   $("td").css("vertical-align","middle");
-      // }
     </script>
 
     <!-- Contact Management -->
     <script>
       var contactList;
       $('#exampleModal').on('show.bs.modal', function (event) {
-        // $.get( "/api/contactManagement/getContacts", function(data) {
-        //   console.log(data);
-        //   contactList = data;
-        // });
-        data = new Array({id: 1,name: '皮可西'},{id: 2,name: '雷丘'});
-        contactList = data;
+        $.get( "/api/contactManagement/getContacts", function(data) {
+          console.log(data);
+          contactList = data;
+        });
       });
 
       function deleteContacts(e){
@@ -837,35 +758,25 @@
         console.log(h_name);
         console.log(h_id);
 
-        var zxc = '';
+        var viewModal_html = '';
 
         $.get( "/api/hostManagement/getHostContacts/" + h_id, function( data ) {
           console.log('getHostContacts');
           console.log(data);
 
           for (c in data) {
-            zxc += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
-            for (a in data[c].addresses) {
-              zxc += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].addresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].addresses[a].address +'</p></div></div>';
+            console.log(data[c]);
+            viewModal_html += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
+            for (a in data[c].notifyAddresses) {
+              viewModal_html += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].notifyAddresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].notifyAddresses[a].address +'</p></div></div>';
             }
-            zxc += '</form></div>';
+            viewModal_html += '</form></div>';
           }
+
+          $('#viewModal').find('.modal-title').text(h_name);
+          $('#view_contact_box').html(viewModal_html);
         });
-
-        // data = new Array({name: '皮可西',addresses: [{notifyType: 'Line',address: 'line123'},{notifyType: 'Phone',address: '0988123456'}]}); //?
-
-        // for (c in data) {
-        //   zxc += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
-        //   for (a in data[c].addresses) {
-        //     zxc += '<div class="form-group"><label class="col-sm-2 control-label">'+ data[c].addresses[a].notifyType +'</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].addresses[a].address +'</p></div></div>';
-        //   }
-        //   zxc += '</form></div>';
-        // }
-
-
-        var modal = $(this);
-        modal.find('.modal-title').text(h_name);
-        modal.find('#view_contact_box').append(zxc);
+        
       });
 
       $("#addContactBtn").click(function(){

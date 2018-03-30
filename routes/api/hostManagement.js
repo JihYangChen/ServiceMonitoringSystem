@@ -44,7 +44,6 @@ router.post('/deleteHost', async function(req, res, next) {
 });
 
 router.get('/getHostContacts/:hostId', async function(req, res, next) {
-    console.log('dfsdfs'+req.params.hostId);
     let getHostContactsUseCase = new GetHostContactsUseCase(hostContactsMapRepository);
     let contacts = await getHostContactsUseCase.execute(req.params.hostId);
     if (contacts == 'error')
