@@ -1,10 +1,10 @@
-var MongoHostContactMapRepository = require('../adapter/repository/mongoDB/MongoHostContactMapRepository')
-var hostContactMapRepository = new MongoHostContactMapRepository();
+var MongoHostContactsMapRepository = require('../adapter/repository/mongoDB/MongoHostContactsMapRepository')
+var hostContactsMapRepository = new MongoHostContactsMapRepository();
 var MongoContactRepository = require('../adapter/repository/mongoDB/MongoContactRepository');
 var contactRepository = new MongoContactRepository();
 
 var GetHostContactsUseCase = require('../useCase/hostManagement/GetHostContactsUseCase');
-let getHostContactsUseCase = new GetHostContactsUseCase(hostContactMapRepository);
+let getHostContactsUseCase = new GetHostContactsUseCase(hostContactsMapRepository);
 var NotifyContactUseCase = require('../useCase/hostMonitor/NotifyContactUseCase');
 
 var EmailNotifier = require('../adapter/notifier/EmailNotifier');

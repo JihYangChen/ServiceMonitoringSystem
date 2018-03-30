@@ -16,7 +16,7 @@ class MongoHostRepository extends IHostRepository {
         try {
             let hostModel = new HostModel(host);
             let newHost = await hostModel.save();
-            return newHost;
+            return newHost._id;
         } catch(error) {
             console.log('AddHosts Error: ' + error);
             return 'error';

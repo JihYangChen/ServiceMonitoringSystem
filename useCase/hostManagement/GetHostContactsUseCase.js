@@ -1,12 +1,12 @@
 var Contact = require('../../entity/Contact');
 
 class GetHostContactsUseCase {
-    constructor(hostContactMapRepository) {
-        this._hostContactMapRepository = hostContactMapRepository;
+    constructor(hostContactsMapRepository) {
+        this._hostContactsMapRepository = hostContactsMapRepository;
     }
 
     async execute(hostId) {
-        let foundContactsFromDB = await this._hostContactMapRepository.getContactsByHostId(hostId);
+        let foundContactsFromDB = await this._hostContactsMapRepository.getContactsByHostId(hostId);
 
         let contactsInstancesList = [];
         let contactsObjectList = []
