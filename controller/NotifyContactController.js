@@ -24,8 +24,10 @@ class NotifyContactController {
 
             let contacts = await getHostContactsUseCase.execute(statusUpdatedHostId);
 
+            if (!contacts)
+                continue;
+
             let message = "Host: \"" + statusUpdatedHostId + "\" status has changed!!"
-            
             for (let contact of contacts) {
                 for (let notifyAddress of contact.notifyAddresses) {
                     let notifier;

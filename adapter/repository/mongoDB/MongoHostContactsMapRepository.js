@@ -20,6 +20,9 @@ class MongoHostContactsMapRepository extends IHostContactsMapRepository {
             let mapResult = await HostContactsMapModel.findOne({hostId: mongoose.Types.ObjectId(hostId)})
                 .populate('contactsId')
                 .exec();
+
+            if (mapResult == null)
+                return null;
             return mapResult.contactsId;
         } catch(error) {
             console.log('GetContactsByHostId Error: ' + error);

@@ -8,6 +8,9 @@ class GetHostContactsUseCase {
     async execute(hostId) {
         let foundContactsFromDB = await this._hostContactsMapRepository.getContactsByHostId(hostId);
 
+        if (!foundContactsFromDB)
+            return null;
+
         let contactsInstancesList = [];
         let contactsObjectList = []
 
@@ -16,7 +19,7 @@ class GetHostContactsUseCase {
         });
 
         contactsInstancesList.forEach(contact => {
-            contactsObjectList.push({"id": contact._id, "name": contact._name, "notifyAddress": contact._notifyAddresses});
+            contactsObjectList.push({"id": contact._id, "name": contact._name, "notifyAddresses": contact._notifyAddresses});
         });
 
         return contactsObjectList;
