@@ -883,11 +883,19 @@
         });
         console.log(notifyAddresses_arr);
 
-        $.post("/api/contactManagement/addContact",
-        { 
-          name: $("#c_name").val(),
-          notifyAddresses: notifyAddresses_arr
+        $.ajax({
+          method: "POST",
+          contentType:"application/json; charset=utf-8",
+          dataType: "json",
+          url: "/api/contactManagement/addContact",
+          data: JSON.stringify(
+                  { 
+                    name: $("#c_name").val(),
+                    notifyAddresses: notifyAddresses_arr
+                  }
+                )
         });
+
         $('#addContactModal').modal('toggle');
         $("#c_name").val('');
         $("#c_email").val('');
