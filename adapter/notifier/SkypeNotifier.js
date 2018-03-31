@@ -1,6 +1,4 @@
-var INotifier = require('../../useCase/interface/notifier/INotifier');
-
-class SkypeNotifier extends INotifier {
+class SkypeNotifier{
 
     notify(address, message) {
         console.log("skype address -> ", address);

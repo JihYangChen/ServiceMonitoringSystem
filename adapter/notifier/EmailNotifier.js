@@ -1,6 +1,4 @@
-var INotifier = require('../../useCase/interface/notifier/INotifier');
-
-class EmailNotifier extends INotifier {
+class EmailNotifier {
 
     notify(address, message) {
         console.log("E address -> ", address);

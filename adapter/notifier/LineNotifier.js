@@ -1,6 +1,4 @@
-var INotifier = require('../../useCase/interface/notifier/INotifier');
-
-class LineNotifier extends INotifier {
+class LineNotifier  {
 
     notify(address, message) {
         console.log("L address -> ", address);

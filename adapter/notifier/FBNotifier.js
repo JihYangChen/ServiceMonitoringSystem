@@ -1,6 +1,4 @@
-var INotifier = require('../../useCase/interface/notifier/INotifier');
-
-class FBNotifier extends INotifier {
+class FBNotifier  {
 
     notify(address, message) {
         console.log("fb address -> ", address);

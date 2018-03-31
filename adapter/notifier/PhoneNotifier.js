@@ -1,6 +1,4 @@
-var INotifier = require('../../useCase/interface/notifier/INotifier');
-
-class PhoneNotifier extends INotifier {
+class PhoneNotifier {
 
     notify(address, message) {
         console.log("Phone address -> ", address);
