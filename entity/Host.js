@@ -11,7 +11,7 @@ class Host {
         this._lastCheckTime = lastCheckTime;
     }
 
-    async publishEvent() {
+    async publishStatusHostEvent() {
         let message = {
             hostId: this._id,
             displayName: this._displayName,

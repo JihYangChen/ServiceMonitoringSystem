@@ -23,13 +23,13 @@ class ScheduledTaskController {
             try {
                 // hosts contains a whole monitored hosts and updatesStatusHostIds, for concept, like [[], []] 
                 let hosts = await monitorHostsUseCase.execute(); // todo: remove diff ids
-                let frontEndReloadHosts = hosts[0];
+                let frontEndReloadHosts = hosts;
                 io.setMaxListeners(0);
                 io.emit('updateHost', frontEndReloadHosts);
             } catch(e) { 
                 console.log('Error: ' + e)
             }
-        }, 5000);
+        }, 15000);
     }
 }
 

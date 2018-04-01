@@ -13,7 +13,6 @@ class HostStatusChangedEventObserver extends IObserver {
         }
         this._getHostContactUseCase = getHostContactsUseCase;
 
-        console.log("gethostcontectusecase -> ", this._getHostContactUseCase);
         this._notifier = notifier;
 
         return instance;
