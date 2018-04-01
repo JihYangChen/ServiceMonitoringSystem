@@ -1,7 +1,7 @@
 var INotifier = require('../../../entity/interface/INotifier');
 
-class INotifierManager extends INotifier {
+class INotifyManager extends INotifier {
     notify(type, address, message) {}
 }
 
-module.exports = INotifierManager;
+module.exports = INotifyManager;

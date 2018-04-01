@@ -30,15 +30,16 @@ class MonitorHostsUseCase {
         // update MongoDB
         await this._hostRepository.updateHosts(monitorResultHosts);
         
-        let statusUpdatedHostIds = this.checkStatusDiff(originalHosts, monitorResultHosts);
+        let statusUpdatedHostIds = await this.checkStatusDiff(hostsInstancesList, monitorResultHosts);
         // [[] []]
         return [monitorResultHosts, statusUpdatedHostIds];
     }
 
-    checkStatusDiff(originalHosts, monitorResultHosts) {
+    async checkStatusDiff(originalHosts, monitorResultHosts) {
         let statusUpdatedHostIds = [];
         for (let index in originalHosts) {
-            if (originalHosts[index].status != monitorResultHosts[index].status) {
+            if (originalHosts[index]._status != monitorResultHosts[index].status) {
+                await originalHosts[index].publishEvent();
                 statusUpdatedHostIds.push(monitorResultHosts[index].id);
             }
         }

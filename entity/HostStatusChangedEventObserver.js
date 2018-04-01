@@ -2,19 +2,40 @@ var IObserver = require('./interface/IObserver');
 var IGetHostContacts = require('./interface/IGetHostContacts');
 var INotifier = require('./interface/INotifier');
 var HostStatusChangedEvent = require('./HostStatusChangedEvent');
+let instance = null;
 
 class HostStatusChangedEventObserver extends IObserver {
 
-    constructor(getHostContactUseCase, notifier) {
-        this._getHostContactUseCase = getHostContactUseCase;
+    constructor(getHostContactsUseCase, notifier) {
+        super(); // ?????
+        if (!instance) {
+            instance = this;
+        }
+        this._getHostContactUseCase = getHostContactsUseCase;
+
+        console.log("gethostcontectusecase -> ", this._getHostContactUseCase);
         this._notifier = notifier;
+
+        return instance;
     }
 
-    update(event) {
-        getHostContacts~~~;
-        event.message.parse(~~~~);
-        this._notifier.notify(notifyType, address, message);
+    async update(event) {
+        if (event._eventName != 'HostStatusChangedEvent')
+            return;
+
+        let contacts = await this._getHostContactUseCase.execute(event._message.hostId);
+
+        if (contacts == null || contacts.length == 0) {
+            return 'failed';
+        }
+        for (let contact of contacts) {
+            for (let notifyAddress of contact.notifyAddresses) {
+                this._notifier.notify(notifyAddress.notifyType, notifyAddress.address, event._message);
+            }
+        }
+
+        return 'success';
     }
 }
 
-module.exports = new HostStatusChangedEventObserver(getHostContactUseCase, notifier);
+module.exports = HostStatusChangedEventObserver;

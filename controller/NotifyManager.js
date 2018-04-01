@@ -1,4 +1,4 @@
-var INotifyManager = require('../useCase/interface/notifier/INotifierManager');
+var INotifyManager = require('../useCase/interface/notifier/INotifyManager');
 
 var EmailNotifier = require('../adapter/notifier/EmailNotifier');
 var FBNotifier = require('../adapter/notifier/FBNotifier');
@@ -20,7 +20,7 @@ class NotifyManager extends INotifyManager {
             notifier = new FBNotifier();
         else if (notifyType == 'Phone')
             notifier = new PhoneNotifier();
-
+            
         notifier.notify(notifyAddress, message);
     }
 }
