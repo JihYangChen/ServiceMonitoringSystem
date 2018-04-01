@@ -1,8 +1,10 @@
 class EmailNotifier {
 
     notify(address, message) {
-        console.log("E address -> ", address);
-        console.log("E message -> ", message);
+        console.log("----------------------------------------------------------");
+        console.log("Email address : ", address);
+        console.log("Email message : ", message);
+        console.log("----------------------------------------------------------\n\n");
     }
 }
 

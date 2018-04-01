@@ -29,6 +29,7 @@ class HostStatusChangedEventObserver extends IObserver {
         }
         for (let contact of contacts) {
             for (let notifyAddress of contact.notifyAddresses) {
+                event._message.contactsName = contact.name;
                 this._notifier.notify(notifyAddress.notifyType, notifyAddress.address, event._message);
             }
         }

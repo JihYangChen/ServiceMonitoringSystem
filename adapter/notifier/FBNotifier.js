@@ -1,8 +1,10 @@
 class FBNotifier  {
 
     notify(address, message) {
-        console.log("fb address -> ", address);
-        console.log("fb message -> ", message);
+        console.log("----------------------------------------------------------");
+        console.log("FB address : ", address);
+        console.log("FB message : ", message);
+        console.log("----------------------------------------------------------\n\n");
     }
 }
 
