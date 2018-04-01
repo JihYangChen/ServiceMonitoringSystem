@@ -15,9 +15,13 @@ class EventPublisher {
         this._observers.push(observer);
     }
 
-    detatchObserver(observer) {
-        console.log('掰掰')
-        // this._observers.push(observer);
+    detatchObserver(deletedObserver) {
+        for (let index in this._observers) {
+            if (this._observers[index] === deletedObserver) {
+                this._observers.splice(index, 1);
+            }
+        }
+        this._observers.push(observer);
     }
 
     async broadcast(event) {
