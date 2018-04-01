@@ -1,6 +1,5 @@
 class INotifier {
-
-    notify(address, message) {}
+    notify(type, address, message) {}
 }
 
 module.exports = INotifier;
