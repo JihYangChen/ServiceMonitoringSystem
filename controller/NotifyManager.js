@@ -21,7 +21,11 @@ class NotifyManager extends INotifyManager {
         else if (notifyType == 'Phone')
             notifier = new PhoneNotifier();
             
-        notifier.notify(notifyAddress, message);
+        try {   
+            notifier.notify(notifyAddress, message);
+        } catch (error) {
+            console.log("error : " + error);
+        }
     }
 }
 

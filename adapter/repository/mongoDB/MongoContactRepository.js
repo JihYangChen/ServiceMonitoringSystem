@@ -18,7 +18,6 @@ class MongoContactRepository extends IContactRepository {
             let newContact = await contactModel.save();
             return newContact;
         } catch(error) {
-            console.log('AddContact Error: ' + error);
             return 'error';
         }
     }
