@@ -1,9 +1,9 @@
 var Host = require('../../entity/Host');
 
 class MonitorHostsUseCase {
-    constructor(hostRepository, hostMonitorManager) {
+    constructor(hostRepository, commandManager) {
         this._hostRepository = hostRepository;
-        this._hostMonitorManager = hostMonitorManager;
+        this._commandManager = commandManager;
     }
 
     async execute() {
@@ -21,7 +21,7 @@ class MonitorHostsUseCase {
 
 
         let monitorResultHosts = [];
-        monitorResultHosts = await this._hostMonitorManager.monitorHosts(hostsObjectList);
+        monitorResultHosts = await this._commandManager.execute(hostsObjectList);
 
         await this._hostRepository.updateHosts(monitorResultHosts);
 

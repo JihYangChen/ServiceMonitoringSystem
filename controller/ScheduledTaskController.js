@@ -2,7 +2,7 @@ var MonitorHostsUseCase = require('../useCase/hostMonitor/MonitorHostsUseCase');
 var InitializeUseCase = require('../useCase/initialize/InitializeUseCase');
 var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
 var MongoHostContactsMapRepositoty = require('../adapter/repository/mongoDB/MongoHostContactsMapRepository');
-var HostMonitorManager = require('../controller/HostMonitorManager');
+var CommandManager = require('../controller/CommandManager');
 var NotifyManager = require('./NotifyManager');
 
 class ScheduledTaskController {
@@ -18,7 +18,7 @@ class ScheduledTaskController {
     }
 
     startTask(io) {
-        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new HostMonitorManager());
+        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new CommandManager());
         setInterval(async function() {
             try {
                 // hosts contains a whole monitored hosts and updatesStatusHostIds, for concept, like [[], []] 

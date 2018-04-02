@@ -1,8 +1,8 @@
 var nmap = require('node-nmap');
 nmap.nmapLocation = "nmap";
 
-class NmapMonitor {
-    async monitorHost(host) {
+class NmapCommand {
+    async execute(host) {
         return await monitorHostPromise(host);
     }
 }
@@ -36,4 +36,4 @@ function setHostStatus(host, newStatus) {
     host.lastCheckTime = Date();
 }
 
-module.exports = NmapMonitor;
+module.exports = NmapCommand;

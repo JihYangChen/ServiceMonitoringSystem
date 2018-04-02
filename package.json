@@ -14,6 +14,7 @@
     "mongoose": "^5.0.11",
     "morgan": "~1.9.0",
     "node-nmap": "^4.0.0",
+    "ping": "^0.2.2",
     "request": "^2.83.0",
     "serve-favicon": "~2.4.5",
     "socket.io": "^2.0.4"
