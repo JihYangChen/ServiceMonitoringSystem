@@ -1,5 +1,7 @@
 var IHostRepository = require('../../../useCase/interface/repository/IHostRepository');
-var HostModel = require('./model/HostModel')
+var HostModel = require('./model/HostModel');
+var HostContactsMapModel = require('./model/HostContactsMapModel');
+var Mongoose = require("mongoose");
 
 class MongoHostRepository extends IHostRepository {
     async getHosts() {
@@ -26,6 +28,9 @@ class MongoHostRepository extends IHostRepository {
     async deleteHost(hostId) {
         try {
             await HostModel.findByIdAndRemove(hostId).exec();
+            let element = new Mongoose.Types.ObjectId(hostId);
+            let query = {hostId : element};
+            await HostContactsMapModel.findOneAndRemove(query).exec();
             return 'Delete OK!';
         } catch(error) {
             console.log('DeleteHost Error: ' + error);

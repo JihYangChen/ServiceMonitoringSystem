@@ -13,11 +13,9 @@ class MongoContactRepository extends IContactRepository {
     }
 
     async addContact(contact) {
-        console.log("contact -> ", contact);
         try {
             let contactModel = new ContactModel(contact);
             let newContact = await contactModel.save();
-            console.log("newContact -> ", newContact);
             return newContact;
         } catch(error) {
             console.log('AddContact Error: ' + error);

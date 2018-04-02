@@ -11,6 +11,7 @@ class MonitorHostsUseCase {
 
         let hostsInstancesList = [];
         foundHostsFromDB.forEach(host => {
+            //onsole.log("host is " + host);
             hostsInstancesList.push(new Host(host._id, host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime));
         });
 
@@ -19,30 +20,25 @@ class MonitorHostsUseCase {
             hostsObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime});
         });
 
-        // willie: because `hostMonitor.monitorHosts()` would modify hostObjectList programmatically, 
-        // hence we need a truely deep copy for original hosts here to prevent it from being rather like a new one
-        // or we can just simply pass `hostsInstancesList` as a original parameter of `checkStatusDiff()`
-        let originalHosts = JSON.parse(JSON.stringify(hostsObjectList));
-
         let monitorResultHosts = [];
         monitorResultHosts = await this._hostMonitor.monitorHosts(hostsObjectList);
-
         // update MongoDB
+
         await this._hostRepository.updateHosts(monitorResultHosts);
         
-        let statusUpdatedHostIds = this.checkStatusDiff(originalHosts, monitorResultHosts);
-        // [[] []]
-        return [monitorResultHosts, statusUpdatedHostIds];
+        await this.checkStatusDiff(hostsInstancesList, monitorResultHosts);
+
+        return monitorResultHosts;
     }
 
-    checkStatusDiff(originalHosts, monitorResultHosts) {
+    async checkStatusDiff(originalHosts, monitorResultHosts) {
         let statusUpdatedHostIds = [];
         for (let index in originalHosts) {
-            if (originalHosts[index].status != monitorResultHosts[index].status) {
-                statusUpdatedHostIds.push(monitorResultHosts[index].id);
+            if (originalHosts[index]._status != monitorResultHosts[index].status) {
+                originalHosts[index]._status = monitorResultHosts[index].status;
+                await originalHosts[index].publishStatusHostEvent();
             }
         }
-        return statusUpdatedHostIds;
     }
 }
 
