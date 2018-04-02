@@ -225,7 +225,7 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Add Host</a>
+                                    <li><a href="#" data-toggle="modal" data-target="#addHostModal"><i class="fa fa-plus"></i> Add Host</a>
                                     </li>
                                     <li><a href="#" data-toggle="modal" data-target="#addContactModal"><i class="fa fa-plus"></i> Add Contact</a>
                                     </li>
@@ -253,7 +253,7 @@
                                 <tbody id="tableContent">
                                   <% for (host in hosts) { %>
                                     <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="<%= hosts[host].displayName %>" data-h_id="6"><%= hosts[host].displayName %></button></td>
+                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="<%= hosts[host].displayName %>" data-h_id="<%= hosts[host].id %>"><%= hosts[host].displayName %></button></td>
                                         <td><%= hosts[host].host %></td>
                                         <td>
                                           <% if (hosts[host].status === "Up"){ %>
@@ -319,11 +319,11 @@
 
 
     <!-- addHostModal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addHostModal" tabindex="-1" role="dialog" aria-labelledby="addHostModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel" style="display: inline-block;">Add Host</h5>
+                <h3 class="modal-title" id="addHostModalLabel" style="display: inline-block;">Add Host</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -356,7 +356,7 @@
 
                     <div class="item form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button class="btn btn-success" type="button" onclick="addContacts()">Add Contact</button>
+                            <button class="btn btn-success" type="button" onclick="joinContact()">Add Contact</button>
                         </div>
                     </div>
                     
@@ -675,7 +675,6 @@
           $(".select_contact").each(function(){
             contacts_arr.push($(this).val());
           });
-          console.log('contacts_arr = '+contacts_arr);
 
           $.ajax({
             method: "POST",
@@ -691,10 +690,10 @@
                 lastCheckTime: Date(),
                 contactsId: contacts_arr
               }
-                  )
+            )
           });
 
-          $('#exampleModal').modal('toggle');
+          $('#addHostModal').modal('toggle');
           $("#displayName").val('');
           $("#host").val('');
         });
@@ -716,26 +715,24 @@
 
     <!-- Contact Management -->
     <script>
-      var contactList;
-      $('#exampleModal').on('show.bs.modal', function (event) {
+      var contact_options;
+      $('#addHostModal').on('show.bs.modal', function (event) {
+        $("#contact_box").empty();
         $.get( "/api/contactManagement/getContacts", function(data) {
           console.log(data);
-          contactList = data;
+
+          contact_options = '';
+          for (c in data) {
+            contact_options += '<option value="'+data[c].id+'">'+data[c].name+'</option>';
+          }
         });
       });
 
-      function deleteContacts(e){
+      function removeContact(e){
         $(e).parents(".item").remove();
       }
 
-      function addContacts(){
-        console.log(contactList);
-
-        var contact_options = '';
-        for (c in contactList) {
-          contact_options += '<option value="'+contactList[c].id+'">'+contactList[c].name+'</option>';
-        }
-
+      function joinContact(){
         $("#contact_box").append(`
           <div class="item form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Contact <span class="required">*</span>
@@ -744,26 +741,19 @@
                   <select class="form-control col-md-7 col-xs-12 select_contact" required="required">`+ contact_options +`</select>
               </div>
               <div class="col-md-1 col-sm-1 col-xs-12">
-                  <button type="button" class="btn btn-danger" onclick="deleteContacts(this)"><i class="fa fa-close"></i></button>
+                  <button type="button" class="btn btn-danger" onclick="removeContact(this)"><i class="fa fa-close"></i></button>
               </div>
           </div>
         `);
-        
       }
 
       $('#viewModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var h_name = button.data('h_name');
         var h_id = button.data('h_id');
-        console.log(h_name);
-        console.log(h_id);
-
-        var viewModal_html = '';
 
         $.get( "/api/hostManagement/getHostContacts/" + h_id, function( data ) {
-          console.log('getHostContacts');
-          console.log(data);
-
+          var viewModal_html = '';
           for (c in data) {
             console.log(data[c]);
             viewModal_html += '<div class="well"><form class="form-horizontal"><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><p class="form-control-static">'+ data[c].name +'</p></div></div>';
@@ -792,7 +782,6 @@
             });
           }
         });
-        console.log(notifyAddresses_arr);
 
         $.ajax({
           method: "POST",
