@@ -2,7 +2,7 @@ var MonitorHostsUseCase = require('../useCase/hostMonitor/MonitorHostsUseCase');
 var InitializeUseCase = require('../useCase/initialize/InitializeUseCase');
 var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
 var MongoHostContactsMapRepositoty = require('../adapter/repository/mongoDB/MongoHostContactsMapRepository');
-var NmapMonitor = require('../adapter/hostMonitor/nmap/NmapMonitor');
+var CommandManager = require('../controller/CommandManager');
 var NotifyManager = require('./NotifyManager');
 
 class ScheduledTaskController {
@@ -18,7 +18,7 @@ class ScheduledTaskController {
     }
 
     startTask(io) {
-        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new NmapMonitor());
+        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new CommandManager());
         setInterval(async function() {
             try {
                 // hosts contains a whole monitored hosts and updatesStatusHostIds, for concept, like [[], []] 
@@ -29,7 +29,7 @@ class ScheduledTaskController {
             } catch(e) { 
                 console.log('Error: ' + e)
             }
-        }, 15000);
+        }, 10000);
     }
 }
 

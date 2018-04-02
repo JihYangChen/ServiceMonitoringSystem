@@ -6,7 +6,8 @@ var hostSchema = new Schema({
   host: String, 
   status: String, 
   statusStartTime: String,
-  lastCheckTime: String
+  lastCheckTime: String,
+  checkServiceOption: String
 }, { collection: 'host' });
 
 module.exports = mongoose.model('host', hostSchema);
