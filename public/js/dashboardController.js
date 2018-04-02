@@ -12,8 +12,8 @@ function updateTable(hosts) {
             <tr>
                 <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="${ hosts[host].displayName }" data-h_id="${ hosts[host].id }">${ hosts[host].displayName }</button></td>
                 <td>${ hosts[host].host }</td>
-                <td>${ hosts[host].checkServiceOption }</td>
                 <td>${ getStatusTd(hosts[host].status) }</td>
+                <td>${ hosts[host].checkServiceOption }</td>
                 <td>${ new Date(hosts[host].lastCheckTime).toLocaleString() }</td>
                 <td>${ getTimeDuration(new Date(hosts[host].statusStartTime).getTime()) }</td>
                 <td><button type="button" value="${ hosts[host].id }" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>

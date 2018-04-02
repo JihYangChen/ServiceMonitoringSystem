@@ -243,8 +243,8 @@
                                     <tr>
                                       <th>Host</th>
                                       <th>Domain Name / IP Address</th>
-                                      <th>Check Service</th>
                                       <th>Status</th>
+                                      <th>Check Service Option</th>
                                       <th>Last Check</th>
                                       <th>Duration</th>
                                       <th>Delete Host</th>
@@ -256,7 +256,6 @@
                                     <tr>
                                         <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="<%= hosts[host].displayName %>" data-h_id="<%= hosts[host].id %>"><%= hosts[host].displayName %></button></td>
                                         <td><%= hosts[host].host %></td>
-                                        <td><%= hosts[host].checkServiceOption %></td>
                                         <td>
                                           <% if (hosts[host].status === "Up"){ %>
                                             <i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> Up
@@ -266,6 +265,7 @@
                                             <i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading
                                           <% }%>
                                         </td>
+                                        <td><%= hosts[host].checkServiceOption %></td>
                                         <td><%= new Date(hosts[host].lastCheckTime).toLocaleString() %></td>
                                         <td><%
                                               var interval = Date.now() - new Date(hosts[host].statusStartTime).getTime();
@@ -353,7 +353,7 @@
                     </div>
 
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkService">Check Option<span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkService">Check Service Option<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select id="checkService" class="form-control col-md-7 col-xs-12" name="checkService" required="required">
