@@ -154,7 +154,7 @@ function joinContact(){
 // 新增Contact
 $("#addContactBtn").click(function(){
     var notifyAddresses_arr = new Array({
-            notifyType: 'email',
+            notifyType: 'Email',
             address: $("#c_email").val()
     });
     $(".c_address_type").each(function(){

@@ -18,8 +18,6 @@ router.get('/getContacts', async function(req, res, next) {
 });
 
 router.post('/addContact', async function(req, res, next) {
-    console.log('AddContact')
-    console.log(req.body)
     for(let notifyAddress of req.body.notifyAddresses)
         console.log(notifyAddress)
     
