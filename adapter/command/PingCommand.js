@@ -1,7 +1,10 @@
 var ping = require('ping');
+var IPingCommand = require('../../useCase/interface/command/IPingCommand');
 
-class PingCommand {
-    async execute(host) {
+class PingCommand extends IPingCommand {
+    async execute() {
+        let host = this._host;
+
         let pingResult = await ping.promise.probe(host.host);
 
         if (pingResult.alive)
@@ -10,6 +13,10 @@ class PingCommand {
             setHostStatus(host, "Down");
 
         return host;
+    }
+
+    setHost(host) {
+        this._host = host;
     }
 }
 

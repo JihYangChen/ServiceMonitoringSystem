@@ -1,9 +1,14 @@
 var nmap = require('node-nmap');
 nmap.nmapLocation = "nmap";
+var INmapCommand = require('../../useCase/interface/command/INmapCommand');
 
-class NmapCommand {
-    async execute(host) {
-        return await monitorHostPromise(host);
+class NmapCommand extends INmapCommand {
+    async execute() {
+        return await monitorHostPromise(this._host);
+    }
+
+    setHost(host) {
+        this._host = host;
     }
 }
 

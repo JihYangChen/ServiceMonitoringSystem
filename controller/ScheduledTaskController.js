@@ -2,7 +2,8 @@ var MonitorHostsUseCase = require('../useCase/hostMonitor/MonitorHostsUseCase');
 var InitializeUseCase = require('../useCase/initialize/InitializeUseCase');
 var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
 var MongoHostContactsMapRepositoty = require('../adapter/repository/mongoDB/MongoHostContactsMapRepository');
-var CommandManager = require('../controller/CommandManager');
+var NmapCommand = require('../adapter/command/NmapCommand');
+var PingCommand = require('../adapter/command/PingCommand');
 var NotifyManager = require('./NotifyManager');
 
 class ScheduledTaskController {
@@ -18,11 +19,10 @@ class ScheduledTaskController {
     }
 
     startTask(io) {
-        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new CommandManager());
+        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new NmapCommand(), new PingCommand());
         setInterval(async function() {
             try {
-                // hosts contains a whole monitored hosts and updatesStatusHostIds, for concept, like [[], []] 
-                let hosts = await monitorHostsUseCase.execute(); // todo: remove diff ids
+                let hosts = await monitorHostsUseCase.execute();
                 let frontEndReloadHosts = hosts;
                 io.setMaxListeners(0);
                 io.emit('updateHost', frontEndReloadHosts);

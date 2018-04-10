@@ -1,9 +1,12 @@
 var Host = require('../../entity/Host');
+var Monitor = require('../../entity/Monitor');
 
 class MonitorHostsUseCase {
-    constructor(hostRepository, commandManager) {
+    constructor(hostRepository, nmapCommand, pingCommand) {
         this._hostRepository = hostRepository;
-        this._commandManager = commandManager;
+        this._nmapCommand = nmapCommand;
+        this._pingCommand = pingCommand;
+        this._monitor = new Monitor();
     }
 
     async execute() {
@@ -21,13 +24,28 @@ class MonitorHostsUseCase {
 
 
         let monitorResultHosts = [];
-        monitorResultHosts = await this._commandManager.execute(hostsObjectList);
+        monitorResultHosts = await this.monitorHosts(hostsObjectList);
 
         await this._hostRepository.updateHosts(monitorResultHosts);
 
         await this.checkStatusDiff(hostsInstancesList, monitorResultHosts);
 
         return monitorResultHosts;
+    }
+
+    async monitorHosts(hostObjectList) {
+        let monitoredHostResults = [];
+        for (let host of hostObjectList) {
+            let command;
+            if (host.checkServiceOption == 'Nmap')
+                command = this._nmapCommand;
+            else if (host.checkServiceOption == 'Ping')
+                command = this._pingCommand;
+            command.setHost(host);
+            this._monitor.storeCommand(command);
+            monitoredHostResults.push(await this._monitor.monitor());
+        }
+        return monitoredHostResults;
     }
 
     async checkStatusDiff(originalHosts, monitorResultHosts) {
