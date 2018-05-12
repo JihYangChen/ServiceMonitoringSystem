@@ -1,5 +1,8 @@
 var Host = require('../../entity/Host');
 var Monitor = require('../../entity/Monitor');
+var IHostRepository = require('../interface/repository/IHostRepository');
+var INmapCommand = require('../interface/command/INmapCommand');
+var IPingCommand = require('../interface/command/IPingCommand');
 
 class MonitorHostsUseCase {
     constructor(hostRepository, nmapCommand, pingCommand) {

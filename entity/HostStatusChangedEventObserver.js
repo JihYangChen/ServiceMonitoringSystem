@@ -7,7 +7,7 @@ let instance = null;
 class HostStatusChangedEventObserver extends IObserver {
 
     constructor(getHostContactsUseCase, notifier) {
-        super(); // ?????
+        super(); 
         if (!instance) {
             instance = this;
         }

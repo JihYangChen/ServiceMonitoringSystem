@@ -5,7 +5,7 @@ var AddHostUseCase = require('../../useCase/hostManagement/AddHostUseCase');
 var DeleteHostUseCase = require('../../useCase/hostManagement/DeleteHostUseCase');
 var GetHostsUseCase = require('../../useCase/hostManagement/GetHostsUseCase');
 var GetHostContactsUseCase = require('../../useCase/hostManagement/GetHostContactsUseCase');
-var AddHostContactsMapUseCase = require('../../useCase/hostManagement/AddHostContactsMapUseCase');
+var AddHostForContactsToMonitorUseCase = require('../../useCase/hostManagement/AddHostForContactsToMonitorUseCase');
 
 var MongoHostRepository = require('../../adapter/repository/mongoDB/MongoHostRepository');
 var hostRepository = new MongoHostRepository();
@@ -25,8 +25,8 @@ router.post('/addHost', async function(req, res, next) {
     let addHostUseCase = new AddHostUseCase(hostRepository);
     let addHostId = await addHostUseCase.execute(req.body);
 
-    let addHostContactsMapUseCase = new AddHostContactsMapUseCase(hostContactsMapRepository);
-    let addHostContactsMapResult = await addHostContactsMapUseCase.execute(addHostId, req.body.contactsId);
+    let addHostForContactsToMonitorUseCase = new AddHostForContactsToMonitorUseCase(hostContactsMapRepository);
+    let addHostContactsMapResult = await addHostForContactsToMonitorUseCase.execute(addHostId, req.body.contactsId);
     
     if (addHostId == 'error' || addHostContactsMapResult == 'error')
         res.sendStatus(500);

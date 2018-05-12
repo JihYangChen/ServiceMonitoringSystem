@@ -1,4 +1,4 @@
-class AddHostContactsMapUseCase {
+class AddHostForContactsToMonitorUseCase {
     constructor(hostContactsMapRepository) {
         this._hostContactsMapRepository = hostContactsMapRepository;
     }
@@ -8,4 +8,4 @@ class AddHostContactsMapUseCase {
     }
 }
 
-module.exports = AddHostContactsMapUseCase;
+module.exports = AddHostForContactsToMonitorUseCase;
