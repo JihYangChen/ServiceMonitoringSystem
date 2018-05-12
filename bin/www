@@ -20,9 +20,11 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var io = require('socket.io')(server); // add this line
+var io = require('socket.io')(server);
 
-require('../scheduledTask/scheduledTask')(io)
+var ScheduledTaskController = require('../controller/ScheduledTaskController');
+let scheduledTaskController = new ScheduledTaskController();
+scheduledTaskController.startTask(io);
 
 /**
  * Listen on provided port, on all network interfaces.

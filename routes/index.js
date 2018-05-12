@@ -1,10 +1,26 @@
 var express = require('express');
 var router = express.Router();
 
-var hosts = require('../database/hosts');
+var GetHostsUseCase = require('../useCase/hostManagement/GetHostsUseCase');
+var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
+var hostRepository = new MongoHostRepository();
 
-router.get('/dashboard', function(req, res, next) {
-  res.render('dashboard', {hosts: hosts});
+router.get('/', async function(req, res, next) {
+  let getHostsUseCase = new GetHostsUseCase(hostRepository);
+  let hosts = await getHostsUseCase.execute();
+  if (hosts == 'error')
+      res.sendStatus(500);
+  else
+    res.render('dashboard', {hosts: hosts});
+});
+
+router.get('/dashboard', async function(req, res, next) {
+  let getHostsUseCase = new GetHostsUseCase(hostRepository);
+  let hosts = await getHostsUseCase.execute();
+  if (hosts == 'error')
+      res.sendStatus(500);
+  else
+    res.render('dashboard', {hosts: hosts});
 });
 
 router.use('/api', require('./api'));

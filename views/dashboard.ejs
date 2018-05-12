@@ -34,6 +34,22 @@
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
+
+    <style>
+    #loadingContent{
+      position: absolute;
+      top: 0%;
+      margin-left: -20px;
+      width: calc(100% - 230px);
+      height: calc(100% + 22px);
+      text-align: center;
+      background-color: #ffffffd6;
+      display: none;
+    }
+    #loadingContent img{
+      padding-top: 18%;
+    }
+    </style>
   </head>
 
   <body class="nav-md">
@@ -209,7 +225,9 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Add Host</a>
+                                    <li><a href="#" data-toggle="modal" data-target="#addHostModal"><i class="fa fa-plus"></i> Add Host</a>
+                                    </li>
+                                    <li><a href="#" data-toggle="modal" data-target="#addContactModal"><i class="fa fa-plus"></i> Add Contact</a>
                                     </li>
                                     <li><a href="#" data-toggle="modal" data-target="#addContactModal"><i class="fa fa-plus"></i> Add Contact</a>
                                     </li>
@@ -228,6 +246,7 @@
                                       <th>Host</th>
                                       <th>Domain Name / IP Address</th>
                                       <th>Status</th>
+                                      <th>Check Service Option</th>
                                       <th>Last Check</th>
                                       <th>Duration</th>
                                       <th>Delete Host</th>
@@ -237,7 +256,8 @@
                                 <tbody id="tableContent">
                                   <% for (host in hosts) { %>
                                     <tr>
-                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="<%= hosts[host].displayName %>" data-h_id="6"><%= hosts[host].displayName %></button></td>
+
+                                        <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="<%= hosts[host].displayName %>" data-h_id="<%= hosts[host].id %>"><%= hosts[host].displayName %></button></td>
                                         <td><%= hosts[host].host %></td>
                                         <td>
                                           <% if (hosts[host].status === "Up"){ %>
@@ -248,6 +268,7 @@
                                             <i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading
                                           <% }%>
                                         </td>
+                                        <td><%= hosts[host].checkServiceOption %></td>
                                         <td><%= new Date(hosts[host].lastCheckTime).toLocaleString() %></td>
                                         <td><%
                                               var interval = Date.now() - new Date(hosts[host].statusStartTime).getTime();
@@ -271,7 +292,7 @@
                                             %>
                                             <%= duration %>
                                         </td>
-                                        <td><button type="button" value="<%= hosts[host].displayName %>" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
+                                        <td><button type="button" value="<%= hosts[host].id %>" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
                                     </tr>
                                   <% } %>
                                 </tbody>
@@ -280,6 +301,12 @@
                     </div>
                 </div>
             </div>
+
+            <!-- loading content -->
+            <div id="loadingContent">
+              <img src="images/loading.svg" alt="">
+            </div>
+            <!-- /loading content -->
             <br />
         </div>
         <!-- /page content -->
@@ -296,12 +323,12 @@
     </div>
 
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- addHostModal -->
+    <div class="modal fade" id="addHostModal" tabindex="-1" role="dialog" aria-labelledby="addHostModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel" style="display: inline-block;">Add Host</h5>
+                <h3 class="modal-title" id="addHostModalLabel" style="display: inline-block;">Add Host</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -328,28 +355,24 @@
                         </div>
                     </div>
 
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="checkService">Check Service Option<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="checkService" class="form-control col-md-7 col-xs-12" name="checkService" required="required">
+                              <option value="Nmap">Nmap</option>
+                              <option value="Ping">Ping</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div id="contact_box">
-                        <!-- <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Contact <span class="required">*</span>
-                            </label>
-                            <div class="col-md-5 col-sm-5 col-xs-12">
-                                <select id="host" class="form-control col-md-7 col-xs-12" name="host" required="required">
-                                    <option value="">Member 1</option>
-                                    <option value="">Member 2</option>
-                                    <option value="">Member 3</option>
-                                    <option value="">Member 4</option>
-                                    <option value="">Member 5</option>
-                                </select>
-                            </div>
-                            <div class="col-md-1 col-sm-1 col-xs-12">
-                                <button type="button" class="btn btn-danger" onclick="deleteContact(this)"><i class="fa fa-close"></i></button>
-                            </div>
-                        </div> -->
+                        <!-- Contact select -->
                     </div>
 
                     <div class="item form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button class="btn btn-success" type="button" id="addContactBtn">Add Contact</button>
+                            <button class="btn btn-success" type="button" onclick="joinContact()">Add Contact</button>
                         </div>
                     </div>
                     
@@ -362,7 +385,159 @@
             </div>
         </div>
     </div>
-    <!-- /Model -- >
+    <!-- /addHostModal -- >
+
+    <!-- addContactModal -->
+    <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="addContactModalLabel" style="display: inline-block;">Add Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal form-label-left" novalidate>
+
+                    <p>Please fill out following information for adding a new Contact.</p>
+                    <br>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="c_name">Contact Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="c_name" class="form-control col-md-7 col-xs-12" name="c_name" required="required" type="text" placeholder="">
+                        </div>
+                    </div>
+                    
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="c_email">E-mail <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="c_email" class="form-control col-md-7 col-xs-12" name="c_email" required="required" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address1
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address1_type" class="form-control  col-md-7 col-xs-12 c_address_type" name="c_address1_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address1_content" class="form-control col-md-7 col-xs-12 c_address_content" name="c_address1_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address2
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address2_type" class="form-control  col-md-7 col-xs-12 c_address_type" name="c_address2_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address2_content" class="form-control col-md-7 col-xs-12 c_address_content" name="c_address2_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address3
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address3_type" class="form-control  col-md-7 col-xs-12 c_address_type" name="c_address3_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address3_content" class="form-control col-md-7 col-xs-12 c_address_content" name="c_address3_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address4
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address4_type" class="form-control  col-md-7 col-xs-12 c_address_type" name="c_address4_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address4_content" class="form-control col-md-7 col-xs-12 c_address_content" name="c_address4_content" type="text" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Address5
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select id="c_address5_type" class="form-control  col-md-7 col-xs-12 c_address_type" name="c_address5_type">
+                                <option value="None">None</option>
+                                <option value="Phone">Phone</option>
+                                <option value="Line">Line</option>
+                                <option value="FB">FB</option>
+                                <option value="Skype">Skype</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input id="c_address5_content" class="form-control col-md-7 col-xs-12 c_address_content" name="c_address5_content" type="text" placeholder="">
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" id="addContactBtn" class="btn btn-success">Add Contact</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /addContactModal -- >
+
+    <!-- viewModal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="viewModalLabel" style="display: inline-block;">Host Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Contact</h4>
+                <div id="view_contact_box">
+                    <!-- Contact info -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /viewModal -- >
 
     <!-- addContactModal -->
     <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">
@@ -637,138 +812,7 @@
       });
     </script>
 
-    <!-- Update Data -->
-    <script>
-      function updateTable(hosts) {
-        var tableContentStr = "";
-
-        for (host in hosts) {
-          tableContentStr += `
-                <tr>
-                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;<button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#viewModal" data-h_name="${ hosts[host].displayName }" data-h_id="6">${ hosts[host].displayName }</button></td>
-                    <td>${ hosts[host].host }</td>
-                    <td>${ getStatusTd(hosts[host].status) }</td>
-                    <td>${ new Date(hosts[host].lastCheckTime).toLocaleString() }</td>
-                    <td>${ getTimeDuration(new Date(hosts[host].statusStartTime).getTime()) }</td>
-                    <td><button type="button" value="${ hosts[host].displayName }" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
-                </tr> `;
-        }
-        $("#tableContent").html( tableContentStr );
-        $("td").css("vertical-align","middle");
-      }
-      
-      function getStatusTd(status) {
-        if (status === "Up")
-          return `<i class="fa  fa-check-circle" style="color:rgb(31, 182, 81)"></i> Up`
-        else if(status === "Down")
-          return `<i class="fa  fa-times-circle" style="color:rgb(254, 16, 45)"></i> Down`
-        else
-          return `<i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading`
-      }
-
-      function getTimeDuration(startTime) {
-        var interval = Date.now() - startTime;
-
-        var msecPerMinute = 1000 * 60;  
-        var msecPerHour = msecPerMinute * 60;  
-        var msecPerDay = msecPerHour * 24;  
-
-        var days = Math.floor(interval / msecPerDay );  
-        interval = interval - (days * msecPerDay );  
-
-        var hours = Math.floor(interval / msecPerHour );  
-        interval = interval - (hours * msecPerHour );  
-
-        var minutes = Math.floor(interval / msecPerMinute );  
-        interval = interval - (minutes * msecPerMinute );  
-
-        var seconds = Math.floor(interval / 1000 );  
-
-        var duration = days + "d, " + hours + "h, " + minutes + "m, " + seconds + "s.";
-        return duration;
-      }
-    </script>
-
-    <!-- Host Management -->
-    <script>
-      $(document).ready(function(){
-        $("#addHostBtn").click(function(){
-          $.post("/api/hostManagement/addHost",
-          { 
-            displayName: $("#displayName").val(), 
-            host: $("#host").val(), 
-            status: "Unchecked", 
-            statusStartTime: Date(), 
-            lastCheckTime: Date()
-          });
-          addHost($("#displayName").val(), $("#host").val());
-          $('#exampleModal').modal('toggle');
-          $("#displayName").val('');
-          $("#host").val('');
-        });
-
-        $("td").css("vertical-align","middle");
-      });
-      
-      $(document).on('click', '.deleteHostBtn', function(){
-        $.post("/api/hostManagement/deleteHost",
-        { 
-          displayName: $(this).val()
-        });
-        $(this).parent().parent().remove();
-      });
-
-      function addHost(displayName, host) {
-        $("#tableContent").append(`
-                  <tr>
-                    <td><i class="fa fa-desktop"></i> &nbsp;&nbsp;${ displayName }</td>
-                    <td>${ host }</td>
-                    <td><i class="fa  fa-refresh" style="color:rgb(46, 166, 236)"></i> Loading</td>
-                    <td>${ new Date().toLocaleString() }</td>
-                    <td>${ getTimeDuration(new Date().getTime()) }</td>
-                    <td><button type="button" value="${ displayName }" class="deleteHostBtn btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Delete</button></td>
-                  </tr> `);
-        $("td").css("vertical-align","middle");
-      }
-    </script>
-
-    <!-- Contact set -->
-    <script>
-      function deleteContact(e){
-        $(e).parents(".item").remove();
-      }
-
-      $("#addContactBtn").click(function(){
-        $("#contact_box").append(`
-          <div class="item form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="host">Contact <span class="required">*</span>
-              </label>
-              <div class="col-md-5 col-sm-5 col-xs-12">
-                  <select id="host" class="form-control col-md-7 col-xs-12" name="host" required="required">
-                      <option value="">Member 1</option>
-                      <option value="">Member 2</option>
-                      <option value="">Member 3</option>
-                      <option value="">Member 4</option>
-                      <option value="">Member 5</option>
-                  </select>
-              </div>
-              <div class="col-md-1 col-sm-1 col-xs-12">
-                  <button type="button" class="btn btn-danger" onclick="deleteContact(this)"><i class="fa fa-close"></i></button>
-              </div>
-          </div>
-        `);
-      });
-
-      $('#viewModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var h_name = button.data('h_name');
-        var h_id = button.data('h_id');
-        console.log(h_name);
-        console.log(h_id);
-        var modal = $(this);
-        modal.find('.modal-title').text(h_name);
-      });
-    </script>
-
+    <!-- Controller -->
+    <script src="../js/dashboardController.js"></script>
   </body>
 </html>
