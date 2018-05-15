@@ -27,10 +27,9 @@ class MonitorHostsUseCase {
             checkCommand.setHost(host.host);
 
             let contactsList = await this.getContactsByHostId(host._id);
-            hostsInstancesList.push(new Host(host._id, host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime, checkCommand));
+            hostsInstancesList.push(new Host(host._id, host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime, checkCommand, contactsList));
             
         };
-        console.log('hostsInstancesList: ' + hostsInstancesList)
         let monitoredHostInstanceList = await this._monitor.monitorHosts(hostsInstancesList);
         
         let monitoredHostObjectList = [];

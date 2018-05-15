@@ -19,10 +19,11 @@ class HostStatusChangedEventObserver extends IObserver {
     }
 
     async update(event) {
+        console.log('Message -> ' + JSON.stringify(event._message));
         if (event._eventName != 'HostStatusChangedEvent')
             return;
-
-        let contacts = await this._getHostContactsUseCase.execute(event._message.hostId);
+            
+        let contacts = event._message.contacts;
 
         if (contacts == null || contacts.length == 0) {
             return 'failed';

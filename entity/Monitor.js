@@ -7,7 +7,6 @@ class Monitor {
             host.setHostStatus(monitorResult.status);
             monitoredHosts.push(host);
         }
-
         
         return monitoredHosts;
     }
