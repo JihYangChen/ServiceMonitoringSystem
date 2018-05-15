@@ -3,7 +3,7 @@ var router = express.Router();
 
 var AddContactUseCase = require('../../useCase/contactManagement/AddContactUseCase');
 // var DeleteHostUseCase = require('../../useCase/hostManagement/DeleteHostUseCase');
-var GetContactsUseCase = require('../../useCase/contactManagement/GetContactUseCase');
+var GetContactsUseCase = require('../../useCase/contactManagement/GetContactsUseCase');
 
 var MongoContactRepository = require('../../adapter/repository/mongoDB/MongoContactRepository');
 var contactRepository = new MongoContactRepository();
@@ -14,7 +14,7 @@ router.get('/getContacts', async function(req, res, next) {
     if (contacts == 'error')
         res.sendStatus(500);
     else
-        res.send(contacts);
+        res.send(contacts)
 });
 
 router.post('/addContact', async function(req, res, next) {

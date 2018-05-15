@@ -28,7 +28,7 @@ class Host {
             host: this._host,
             status: this._status,
             statusStartTime: this._statusStartTime,
-            lastCheckTime: this._lastCheckTime, 
+            lastCheckTime: this._lastCheckTime,
             checkCommand: this._checkCommand.getCommandString()
         }
 

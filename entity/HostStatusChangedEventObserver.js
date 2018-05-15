@@ -11,7 +11,7 @@ class HostStatusChangedEventObserver extends IObserver {
         if (!instance) {
             instance = this;
         }
-        this._getHostContactUseCase = getHostContactsUseCase;
+        this._getHostContactsUseCase = getHostContactsUseCase;
 
         this._notifier = notifier;
 
@@ -22,7 +22,7 @@ class HostStatusChangedEventObserver extends IObserver {
         if (event._eventName != 'HostStatusChangedEvent')
             return;
 
-        let contacts = await this._getHostContactUseCase.execute(event._message.hostId);
+        let contacts = await this._getHostContactsUseCase.execute(event._message.hostId);
 
         if (contacts == null || contacts.length == 0) {
             return 'failed';

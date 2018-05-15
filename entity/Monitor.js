@@ -8,6 +8,7 @@ class Monitor {
             monitoredHosts.push(host);
         }
 
+        
         return monitoredHosts;
     }
 }
