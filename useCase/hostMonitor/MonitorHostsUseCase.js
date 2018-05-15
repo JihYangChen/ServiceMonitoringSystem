@@ -1,14 +1,13 @@
 var Host = require('../../entity/Host');
 var Monitor = require('../../entity/Monitor');
 var IHostRepository = require('../interface/repository/IHostRepository');
-var INmapCommand = require('../interface/command/INmapCommand');
-var IPingCommand = require('../interface/command/IPingCommand');
+// TODO: Delete Command require
+var NmapCommand = require('../../entity/command/NmapCommand');
+var PingCommand = require('../../entity/command/PingCommand');
 
 class MonitorHostsUseCase {
-    constructor(hostRepository, nmapCommand, pingCommand) {
+    constructor(hostRepository) {
         this._hostRepository = hostRepository;
-        this._nmapCommand = nmapCommand;
-        this._pingCommand = pingCommand;
         this._monitor = new Monitor();
     }
 
@@ -17,49 +16,27 @@ class MonitorHostsUseCase {
 
         let hostsInstancesList = [];
         foundHostsFromDB.forEach(host => {
-            hostsInstancesList.push(new Host(host._id, host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime, host.checkServiceOption));
-        });
-
-        let hostsObjectList = [];
-        hostsInstancesList.forEach(host => {
-            hostsObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime, "checkServiceOption": host._checkServiceOption});
-        });
-
-
-        let monitorResultHosts = [];
-        monitorResultHosts = await this.monitorHosts(hostsObjectList);
-
-        await this._hostRepository.updateHosts(monitorResultHosts);
-
-        await this.checkStatusDiff(hostsInstancesList, monitorResultHosts);
-
-        return monitorResultHosts;
-    }
-
-    async monitorHosts(hostObjectList) {
-        let monitoredHostResults = [];
-        for (let host of hostObjectList) {
-            let command;
+            // TODO: Modify command check
+            let checkCommand;
             if (host.checkServiceOption == 'Nmap')
-                command = this._nmapCommand;
-            else if (host.checkServiceOption == 'Ping')
-                command = this._pingCommand;
-            command.setHost(host);
-            this._monitor.storeCommand(command);
-            monitoredHostResults.push(await this._monitor.monitor());
-        }
-        return monitoredHostResults;
-    }
+                checkCommand = new NmapCommand();
+            else
+                checkCommand = new PingCommand();
+            checkCommand.setHost(host.host);
+            hostsInstancesList.push(new Host(host._id, host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime, checkCommand));
+        });
 
-    async checkStatusDiff(originalHosts, monitorResultHosts) {
-        let statusUpdatedHostIds = [];
+        let monitoredHostInstanceList = await this._monitor.monitorHosts(hostsInstancesList);
 
-        for (let index in originalHosts) {
-            if (originalHosts[index]._status != monitorResultHosts[index].status) {
-                originalHosts[index]._status = monitorResultHosts[index].status;
-                await originalHosts[index].publishStatusHostEvent();
-            }
-        }
+        let monitoredHostObjectList = [];
+        monitoredHostInstanceList.forEach(host => {
+            monitoredHostObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime, "checkServiceOption": host._checkCommand.getCommandString()});
+        });
+
+
+        await this._hostRepository.updateHosts(monitoredHostObjectList);
+
+        return monitoredHostObjectList;
     }
 }
 

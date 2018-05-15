@@ -2,8 +2,6 @@ var MonitorHostsUseCase = require('../useCase/hostMonitor/MonitorHostsUseCase');
 var InitializeUseCase = require('../useCase/initialize/InitializeUseCase');
 var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
 var MongoHostContactsMapRepositoty = require('../adapter/repository/mongoDB/MongoHostContactsMapRepository');
-var NmapCommand = require('../adapter/command/NmapCommand');
-var PingCommand = require('../adapter/command/PingCommand');
 var NotifyManager = require('./NotifyManager');
 
 class ScheduledTaskController {
@@ -19,7 +17,7 @@ class ScheduledTaskController {
     }
 
     startTask(io) {
-        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository(), new NmapCommand(), new PingCommand());
+        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository());
         setInterval(async function() {
             try {
                 let hosts = await monitorHostsUseCase.execute();
