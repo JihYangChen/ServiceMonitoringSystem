@@ -108,6 +108,12 @@ class EntityContext {
         });
     }
 
+    getContactsByHostId(hostId) {
+        return this._hostList.filter( host => {
+            return host._id == hostId;
+        })[0]._contacts;
+    }
+
 }
 
 module.exports = EntityContext;
