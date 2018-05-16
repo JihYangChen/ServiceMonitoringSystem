@@ -12,18 +12,20 @@ var NotifyManager = require('./controller/NotifyManager');
 
 class EntityContext {
     constructor(){
-        this.eventPublisher = this.initEventPublisher();
-        this.hostList = this.initHostList();
-        this.contactList = this.initContactList();
+        this.hostList = [];
+        this.contactList = [];
+
+        this.initEventPublisher(this.eventPublisher);
+        this.initHostList(this.hostList);
+        this.initContactList(this.contactList);
     }
 
-    initEventPublisher() {
+    initEventPublisher(eventPublisher) {
         let hostStatusChangedEventObserver = new HostStatusChangedEventObserver(new NotifyManager());
-        return new EventPublisher().attachObserver(hostStatusChangedEventObserver);
+        eventPublisher = new EventPublisher().attachObserver(hostStatusChangedEventObserver);
     }
 
-    async initHostList() {
-        let hostList = [];
+    async initHostList(hostList) {
         let foundHostObjectsFromDB = await mongoHostRepository.getHosts();
         
         for (let hostObject of foundHostObjectsFromDB) {
@@ -40,11 +42,9 @@ class EntityContext {
         }
 
         console.log('HostList initialization finished!');
-        return hostList;
     }
 
-    async initContactList() {
-        let contactList = [];
+    async initContactList(contactList) {
         let foundContactObjectsFromDB = await mongoContactRepository.getContacts();
         
         for (let contactObject of foundContactObjectsFromDB) {
@@ -52,7 +52,6 @@ class EntityContext {
         }
 
         console.log('ContactList initialization finished!');
-        return contactList;
     }
 
     async getContactsByHostIdFromRepository(hostId) {
@@ -64,6 +63,10 @@ class EntityContext {
         });
 
         return contactInstantList;
+    }
+
+    getHosts() {
+        return this.hostList;
     }
 
 }

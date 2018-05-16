@@ -14,7 +14,7 @@ var hostContactsMapRepository = new MongoHostContactsMapRepository();
 
 router.get('/getHosts', async function(req, res, next) {
     var entityContext = req.app.get('entityContext');
-    let getHostsUseCase = new GetHostsUseCase(entityContext, hostRepository);
+    let getHostsUseCase = new GetHostsUseCase(entityContext);
     let hosts = await getHostsUseCase.execute();
 
     if (hosts == 'error')
