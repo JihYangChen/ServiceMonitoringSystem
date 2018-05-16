@@ -105,13 +105,18 @@ class EntityContext {
     getContactById(contactId) {
         return this._contactList.filter( contact => {
             return contact._id == contactId;
-        });
+        })[0];
     }
 
     getContactsByHostId(hostId) {
         return this._hostList.filter( host => {
             return host._id == hostId;
         })[0]._contacts;
+    }
+
+    addContact(newContact) {
+        console.log('newContact' + JSON.stringify(newContact._notifyAddresses));
+        this._contactList.push(newContact);
     }
 
 }

@@ -33,8 +33,6 @@ class AddHostUseCase {
             
         this._context.addHost(hostInstance);
 
-        console.log('contactList' + contactList[0]._name);
-        console.log('contactsId' + hostObject.contactsId);
         await this._hostContactsMapRepository.addHostContactsMap(hostId, hostObject.contactsId);
 
         return hostId;
