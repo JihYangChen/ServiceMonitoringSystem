@@ -32,8 +32,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// EntityContext Setting
+// EntityContext setting
 var entityContext = new EntityContext();
+app.set('entityContext', entityContext);
 
 // Routes setting
 app.use(function(req, res, next) {

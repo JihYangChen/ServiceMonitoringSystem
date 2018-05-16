@@ -39,6 +39,7 @@ class EntityContext {
             hostList.push(new Host(this.eventPublisher, hostObject._id, hostObject.displayName, hostObject.host, hostObject.status, hostObject.statusStartTime, hostObject.lastCheckTime, checkCommand, contacts));
         }
 
+        console.log('HostList initialization finished!');
         return hostList;
     }
 
@@ -49,6 +50,8 @@ class EntityContext {
         for (let contactObject of foundContactObjectsFromDB) {
             contactList.push(new Contact(contactObject._id, contactObject.name, contactObject.notifyAddresses));
         }
+
+        console.log('ContactList initialization finished!');
         return contactList;
     }
 

@@ -9,8 +9,10 @@ var MongoContactRepository = require('../../adapter/repository/mongoDB/MongoCont
 var contactRepository = new MongoContactRepository();
 
 router.get('/getContacts', async function(req, res, next) {
-    let getContactsUseCase = new GetContactsUseCase(contactRepository);
+    var entityContext = req.app.get('entityContext');
+    let getContactsUseCase = new GetContactsUseCase(entityContext, contactRepository);
     let contacts = await getContactsUseCase.execute();
+
     if (contacts == 'error')
         res.sendStatus(500);
     else
@@ -18,11 +20,13 @@ router.get('/getContacts', async function(req, res, next) {
 });
 
 router.post('/addContact', async function(req, res, next) {
+    var entityContext = req.app.get('entityContext');
     for(let notifyAddress of req.body.notifyAddresses)
         console.log(notifyAddress)
     
-    let addContactUseCase = new AddContactUseCase(contactRepository);
+    let addContactUseCase = new AddContactUseCase(entityContext, contactRepository);
     let result = await addContactUseCase.execute(req.body);
+
     if (result == 'error')
         res.sendStatus(500);
     else
