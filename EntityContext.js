@@ -11,18 +11,19 @@ var HostStatusChangedEventObserver = require('./entity/HostStatusChangedEventObs
 var NotifyManager = require('./controller/NotifyManager');
 
 class EntityContext {
-    constructor(){
-        this.hostList = [];
-        this.contactList = [];
+    constructor() {
+        this._eventPublisher = new EventPublisher();
+        this._hostList = [];
+        this._contactList = [];
 
-        this.initEventPublisher(this.eventPublisher);
-        this.initHostList(this.hostList);
-        this.initContactList(this.contactList);
+        this.initEventPublisher(this._eventPublisher);
+        this.initHostList(this._hostList);
+        this.initContactList(this._contactList);
     }
 
     initEventPublisher(eventPublisher) {
         let hostStatusChangedEventObserver = new HostStatusChangedEventObserver(new NotifyManager());
-        eventPublisher = new EventPublisher().attachObserver(hostStatusChangedEventObserver);
+        eventPublisher.attachObserver(hostStatusChangedEventObserver);
     }
 
     async initHostList(hostList) {
@@ -38,7 +39,7 @@ class EntityContext {
                 checkCommand = new PingCommand();
             checkCommand.setHost(hostObject.host);
 
-            hostList.push(new Host(this.eventPublisher, hostObject._id, hostObject.displayName, hostObject.host, hostObject.status, hostObject.statusStartTime, hostObject.lastCheckTime, checkCommand, contacts));
+            hostList.push(new Host(this._eventPublisher, hostObject._id, hostObject.displayName, hostObject.host, hostObject.status, hostObject.statusStartTime, hostObject.lastCheckTime, checkCommand, contacts));
         }
 
         console.log('HostList initialization finished!');
@@ -66,7 +67,11 @@ class EntityContext {
     }
 
     getHosts() {
-        return this.hostList;
+        return this._hostList;
+    }
+
+    updateHosts(updatedHosts) {
+        this._hostList = updatedHosts;
     }
 
 }

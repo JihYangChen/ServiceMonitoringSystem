@@ -2,11 +2,11 @@ var Host = require('../../entity/Host');
 
 class GetHostsUseCase {
     constructor(context) {
-        this.context = context;
+        this._context = context;
     }
 
     async execute() {
-        let hostsInstancesList = this.context.getHosts();
+        let hostsInstancesList = this._context.getHosts();
 
         let hostsObjectList = [];
         hostsInstancesList.forEach(host => {
