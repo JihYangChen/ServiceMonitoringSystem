@@ -11,15 +11,19 @@ var hostRepository = new MongoHostRepository();
 var MongoHostContactsMapRepository = require('../../adapter/repository/mongoDB/MongoHostContactsMapRepository');
 var hostContactsMapRepository = new MongoHostContactsMapRepository();
 
-router.get('/getHosts', async function(req, res, next) {
+var HostController = require('../../controller/HostController');
+var hostController = new HostController();
+var hostViewModel = hostController._hostViewModel;
+
+router.get('/getHosts', function(req, res, next) {
     var entityContext = req.app.get('entityContext');
-    let getHostsUseCase = new GetHostsUseCase(entityContext);
-    let hosts = await getHostsUseCase.execute();
+    hostController.getHosts();
+    let hostsInfo = hostViewModel.getHostInfo();
 
     if (hosts == 'error')
         res.sendStatus(500);
     else
-        res.send(hosts);
+        res.send(hostsInfo);
 });
 
 router.post('/addHost', async function(req, res, next) {
