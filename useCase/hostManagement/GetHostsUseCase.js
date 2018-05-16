@@ -1,4 +1,5 @@
 var Host = require('../../entity/Host');
+var HostDTO = require('../DTO/HostDTO');
 
 class GetHostsUseCase {
     constructor(context) {
@@ -8,12 +9,13 @@ class GetHostsUseCase {
     async execute() {
         let hostsInstanceList = this._context.getHosts();
 
-        let hostsObjectList = [];
+        let hostDTOList = [];
         hostsInstanceList.forEach(host => {
-            hostsObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime, "checkServiceOption": host._checkCommand.getCommandString()});
+            let hostDTO = new HostDTO(host._id, host._displayName, host._host, host._status, host._statusStartTime, host._lastCheckTime, host._checkCommand.getCommandString());
+            hostDTOList.push(hostDTO);
         });
 
-        return hostsObjectList;
+        return hostDTOList;
     }
 }
 
