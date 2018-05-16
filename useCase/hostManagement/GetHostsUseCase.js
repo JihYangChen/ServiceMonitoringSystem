@@ -6,7 +6,7 @@ class GetHostsUseCase {
         this._context = context;
     }
 
-    async execute() {
+    execute() {
         let hostsInstanceList = this._context.getHosts();
 
         let hostDTOList = [];

@@ -15,9 +15,9 @@ var HostController = require('../../controller/HostController');
 var hostController = new HostController();
 var hostViewModel = hostController._hostViewModel;
 
-router.get('/getHosts', async function(req, res, next) {
+router.get('/getHosts', function(req, res, next) {
     var entityContext = req.app.get('entityContext');
-    await hostController.getHosts();
+    hostController.getHosts();
     let hostsInfo = hostViewModel.getHostInfo();
 
     if (hosts == 'error')

@@ -6,9 +6,9 @@ class HostController {
         this._hostViewModel = new HostViewModel();
     }
 
-    async getHosts() {
+    getHosts() {
         let getHostsUseCase = new GetHostsUseCase(entityContext);
-        let hostDTOList = await getHostsUseCase.execute();
+        let hostDTOList = getHostsUseCase.execute();
         this._hostViewModel._hostDTOList = hostDTOList;
     }
 }
