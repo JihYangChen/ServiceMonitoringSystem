@@ -11,7 +11,6 @@ class Host {
         this._lastCheckTime = lastCheckTime;
         this._checkCommand = checkCommand;
         this._contacts = contacts;
-        console.log('Host'+this._eventPublisher);
     }
 
     setHostStatus(newStatus) {

@@ -66,8 +66,17 @@ class EntityContext {
         return contactInstantList;
     }
 
+    /* Host */  
+
     getHosts() {
         return this._hostList;
+    }
+
+    getHostById(hostId) {
+        let hosts = this._hostList.filter(host => {
+            return JSON.stringify(host._id) == JSON.stringify(hostId);
+        });
+        return hosts.length > 0 ? hosts[0] : null;
     }
 
     updateHosts(updatedHosts) {
@@ -78,6 +87,17 @@ class EntityContext {
         this._hostList.push(newHost);
     }
 
+    deleteHostById(hostId) {
+        let host = this.getHostById(hostId);
+        var index = this._hostList.indexOf(host);
+        if (index > -1) {
+            this._hostList.splice(index, 1);
+        }
+    }
+
+
+    /* Contact */  
+    
     getContacts() {
         return this._contactList;
     }
