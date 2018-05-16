@@ -20,7 +20,6 @@ function monitorHostPromise(host) {
     return new Promise(function(resolve, reject) {
         let quickscan = new nmap.QuickScan(host);
         let result = {};
-        console.log("Nmap Command");
 
         quickscan.on('complete', function(data) {
             if (data.length != 0)

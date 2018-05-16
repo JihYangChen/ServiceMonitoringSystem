@@ -6,20 +6,12 @@ let instance = null;
 
 class HostStatusChangedEventObserver extends IObserver {
 
-    constructor(getHostContactsUseCase, notifier) {
-        super(); 
-        if (!instance) {
-            instance = this;
-        }
-        this._getHostContactsUseCase = getHostContactsUseCase;
-
+    constructor(notifier) {
+        super();                    // To use 'this', must call super() first.
         this._notifier = notifier;
-
-        return instance;
     }
 
     async update(event) {
-        console.log('Message -> ' + JSON.stringify(event._message));
         if (event._eventName != 'HostStatusChangedEvent')
             return;
             

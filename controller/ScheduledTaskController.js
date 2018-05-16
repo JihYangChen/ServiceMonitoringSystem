@@ -1,23 +1,14 @@
 var MonitorHostsUseCase = require('../useCase/hostMonitor/MonitorHostsUseCase');
-var InitializeUseCase = require('../useCase/initialize/InitializeUseCase');
 var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
 var MongoHostContactsMapRepositoty = require('../adapter/repository/mongoDB/MongoHostContactsMapRepository');
-var NotifyManager = require('./NotifyManager');
 
 class ScheduledTaskController {
-
-    constructor() {
-        this.initializeDomain();
-    }
-
-    initializeDomain() {
-        let notifyManager = new NotifyManager();
-        let initalizeUseCase = new InitializeUseCase(notifyManager, new MongoHostContactsMapRepositoty());
-        initalizeUseCase.execute();
+    constructor(entityContext) {
+        this.entityContext = entityContext;
     }
 
     startTask(io) {
-        let monitorHostsUseCase = new MonitorHostsUseCase(new MongoHostRepository());
+        let monitorHostsUseCase = new MonitorHostsUseCase(this.entityContext, new MongoHostRepository());
         setInterval(async function() {
             try {
                 let hosts = await monitorHostsUseCase.execute();
