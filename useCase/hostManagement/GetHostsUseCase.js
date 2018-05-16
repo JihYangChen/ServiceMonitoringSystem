@@ -6,10 +6,10 @@ class GetHostsUseCase {
     }
 
     async execute() {
-        let hostsInstancesList = this._context.getHosts();
+        let hostsInstanceList = this._context.getHosts();
 
         let hostsObjectList = [];
-        hostsInstancesList.forEach(host => {
+        hostsInstanceList.forEach(host => {
             hostsObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime, "checkServiceOption": host._checkCommand.getCommandString()});
         });
 

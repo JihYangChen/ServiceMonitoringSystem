@@ -12,7 +12,6 @@ class HostStatusChangedEventObserver extends IObserver {
     }
 
     async update(event) {
-        console.log('Message -> ' + JSON.stringify(event._message));
         if (event._eventName != 'HostStatusChangedEvent')
             return;
             

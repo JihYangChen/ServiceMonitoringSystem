@@ -74,6 +74,20 @@ class EntityContext {
         this._hostList = updatedHosts;
     }
 
+    addHost(newHost) {
+        this._hostList.push(newHost);
+    }
+
+    getContacts() {
+        return this._contactList;
+    }
+
+    getContactById(contactId) {
+        return this._contactList.filter( contact => {
+            return contact._id == contactId;
+        });
+    }
+
 }
 
 module.exports = EntityContext;

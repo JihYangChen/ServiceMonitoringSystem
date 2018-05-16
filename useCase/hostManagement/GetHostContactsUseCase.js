@@ -1,7 +1,8 @@
 var Contact = require('../../entity/Contact');
 
 class GetHostContactsUseCase {
-    constructor(hostContactsMapRepository) {
+    constructor(context, hostContactsMapRepository) {
+        this._context = context;
         this._hostContactsMapRepository = hostContactsMapRepository;
     }
 
