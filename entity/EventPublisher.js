@@ -4,11 +4,7 @@ let instance = null;
 
 class EventPublisher {
     constructor() {
-        if (!instance) {
-            instance = this;
-        }
         this._observers = [];
-        return instance;
     }
 
     attachObserver(observer) {

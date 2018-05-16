@@ -1,8 +1,8 @@
 var HostStatusChangedEvent = require('../entity/HostStatusChangedEvent');
-var EvenetPublisher = require('../entity/EventPublisher');
 
 class Host {
-    constructor(id, displayName, host, status, statusStartTime, lastCheckTime, checkCommand, contacts) {
+    constructor(eventPublisher, id, displayName, host, status, statusStartTime, lastCheckTime, checkCommand, contacts) {
+        this._eventPublisher = eventPublisher;
         this._id = id;
         this._displayName = displayName;
         this._host = host;
@@ -37,8 +37,7 @@ class Host {
                         }
             })
         }
-
-        await new EvenetPublisher().broadcast(new HostStatusChangedEvent(message));
+        await _eventPublisher.broadcast(new HostStatusChangedEvent(message));
     }
 }
 

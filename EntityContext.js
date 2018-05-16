@@ -8,17 +8,22 @@ var NmapCommand = require('./entity/command/NmapCommand');
 var PingCommand = require('./entity/command/NmapCommand');
 var EventPublisher = require('./entity/EventPublisher');
 var HostStatusChangedEventObserver = require('./entity/HostStatusChangedEventObserver');
+var NotifyManager = require('./controller/NotifyManager');
 
 class EntityContext {
     constructor(){
-        this.hostList = [];
-        this.contactList = [];
-        
-        this.initHostList();
-        this.initContactList();
+        this.eventPublisher = this.initEventPublisher();
+        this.hostList = this.initHostList();
+        this.contactList = this.initContactList();
     }
 
-    async initHostList(){
+    initEventPublisher() {
+        let hostStatusChangedEventObserver = new HostStatusChangedEventObserver(new NotifyManager());
+        return new EventPublisher().attachObserver(hostStatusChangedEventObserver);
+    }
+
+    async initHostList() {
+        let hostList = [];
         let foundHostObjectsFromDB = await mongoHostRepository.getHosts();
         
         for (let hostObject of foundHostObjectsFromDB) {
@@ -31,16 +36,20 @@ class EntityContext {
                 checkCommand = new PingCommand();
             checkCommand.setHost(hostObject.host);
 
-            this.hostList.push(new Host(hostObject._id, hostObject.displayName, hostObject.host, hostObject.status, hostObject.statusStartTime, hostObject.lastCheckTime, checkCommand, contacts));
+            hostList.push(new Host(this.eventPublisher, hostObject._id, hostObject.displayName, hostObject.host, hostObject.status, hostObject.statusStartTime, hostObject.lastCheckTime, checkCommand, contacts));
         }
+
+        return hostList;
     }
 
-    async initContactList(){
+    async initContactList() {
+        let contactList = [];
         let foundContactObjectsFromDB = await mongoContactRepository.getContacts();
         
         for (let contactObject of foundContactObjectsFromDB) {
-            this.contactList.push(new Contact(contactObject._id, contactObject.name, contactObject.notifyAddresses));
+            contactList.push(new Contact(contactObject._id, contactObject.name, contactObject.notifyAddresses));
         }
+        return contactList;
     }
 
     async getContactsByHostIdFromRepository(hostId) {
