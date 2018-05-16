@@ -1,4 +1,4 @@
-var GetHostUseCase = require('../useCase/hostManagement/GetHostsUseCase');
+var GetHostsUseCase = require('../useCase/hostManagement/GetHostsUseCase');
 var HostViewModel = require('../viewModel/HostViewModel')
 
 class HostController {
@@ -6,7 +6,7 @@ class HostController {
         this._hostViewModel = new HostViewModel();
     }
 
-    getHosts() {
+    getHosts(entityContext) {
         let getHostsUseCase = new GetHostsUseCase(entityContext);
         let hostDTOList = getHostsUseCase.execute();
         this._hostViewModel._hostDTOList = hostDTOList;

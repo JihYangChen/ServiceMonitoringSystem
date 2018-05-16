@@ -17,8 +17,8 @@ var hostViewModel = hostController._hostViewModel;
 
 router.get('/getHosts', function(req, res, next) {
     var entityContext = req.app.get('entityContext');
-    hostController.getHosts();
-    let hostsInfo = hostViewModel.getHostInfo();
+    hostController.getHosts(entityContext);
+    let hostsInfo = hostViewModel.getHostsInfo();
 
     if (hosts == 'error')
         res.sendStatus(500);
