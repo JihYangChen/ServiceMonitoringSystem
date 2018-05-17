@@ -1,4 +1,4 @@
 # ServiceMonitoringSystem
 
-## Package Diagram
-![](https://i.imgur.com/WZ5ppex.png)
+## Architecture Diagram
+![](https://i.imgur.com/EIGqAl7.jpg)
