@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var index = require('./routes/index');
 
 var app = express();
+var EntityContext = require('./EntityContext');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +31,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// EntityContext setting
+var entityContext = new EntityContext();
+app.set('entityContext', entityContext);
 
 // Routes setting
 app.use(function(req, res, next) {

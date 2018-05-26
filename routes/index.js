@@ -1,26 +1,30 @@
 var express = require('express');
 var router = express.Router();
 
-var GetHostsUseCase = require('../useCase/hostManagement/GetHostsUseCase');
-var MongoHostRepository = require('../adapter/repository/mongoDB/MongoHostRepository');
-var hostRepository = new MongoHostRepository();
+var HostPresenter = require('../presenter/HostPresenter');
+var HostPresenter = new HostPresenter();
+var hostViewModel = HostPresenter._hostViewModel;
 
 router.get('/', async function(req, res, next) {
-  let getHostsUseCase = new GetHostsUseCase(hostRepository);
-  let hosts = await getHostsUseCase.execute();
-  if (hosts == 'error')
-      res.sendStatus(500);
-  else
-    res.render('dashboard', {hosts: hosts});
+    var entityContext = req.app.get('entityContext');
+    HostPresenter.getHosts(entityContext);
+    let hostsInfo = hostViewModel.getHostsInfo();
+
+    if (hostsInfo == 'error')
+        res.sendStatus(500);
+    else
+        res.render('dashboard', {hosts: hostsInfo});
 });
 
 router.get('/dashboard', async function(req, res, next) {
-  let getHostsUseCase = new GetHostsUseCase(hostRepository);
-  let hosts = await getHostsUseCase.execute();
-  if (hosts == 'error')
-      res.sendStatus(500);
-  else
-    res.render('dashboard', {hosts: hosts});
+    var entityContext = req.app.get('entityContext');
+    HostPresenter.getHosts(entityContext);
+    let hostsInfo = hostViewModel.getHostsInfo();
+    
+    if (hostsInfo == 'error')
+        res.sendStatus(500);
+    else
+        res.render('dashboard', {hosts: hostsInfo});
 });
 
 router.use('/api', require('./api'));

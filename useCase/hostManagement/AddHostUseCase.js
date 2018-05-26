@@ -1,20 +1,41 @@
 var Host = require('../../entity/Host')
+var NmapCommand = require('../../entity/command/NmapCommand');
+var PingCommand = require('../../entity/command/PingCommand');
 
 class AddHostUseCase {
-    constructor(hostRepository) {
+    constructor(context, hostRepository, hostContactsMapRepository) {
+        this._context = context;
         this._hostRepository = hostRepository;
+        this._hostContactsMapRepository = hostContactsMapRepository;
     }
 
-    async execute(host) {
-        if (!('statusStartTime' in host))
-            host.statusStartTime = Date();
-        if (!('lastCheckTime' in host))
-            host.lastCheckTime = Date();
+    async execute(hostObject) {
+        if (!('statusStartTime' in hostObject))
+            hostObject.statusStartTime = Date();
+        if (!('lastCheckTime' in hostObject))
+            hostObject.lastCheckTime = Date();
 
-        let hostInstance = new Host("", host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime, host.checkServiceOption);
-        let hostObject = {"displayName": hostInstance._displayName, "host": hostInstance._host, "status": hostInstance._status, "statusStartTime": hostInstance._statusStartTime, "lastCheckTime": hostInstance._lastCheckTime, "checkServiceOption": hostInstance._checkServiceOption};
+        let hostId = await this._hostRepository.addHost(hostObject);
+
+        let checkCommand;
+        if (hostObject.checkServiceOption == 'Nmap')
+            checkCommand = new NmapCommand();
+        else
+            checkCommand = new PingCommand();
+        checkCommand.setHost(hostObject.host);
         
-        return await this._hostRepository.addHost(hostObject);
+        let contactList = hostObject.contactsId.map( contactId => {
+            return this._context.getContactById(contactId);
+        });
+
+        let hostInstance = new Host(this._context._eventPublisher, hostId, hostObject.displayName, hostObject.host, hostObject.status, hostObject.statusStartTime, 
+                                    hostObject.lastCheckTime, checkCommand, contactList);
+            
+        this._context.addHost(hostInstance);
+
+        await this._hostContactsMapRepository.addHostContactsMap(hostId, hostObject.contactsId);
+
+        return hostId;
     }
 }
 

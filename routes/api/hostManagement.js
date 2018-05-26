@@ -5,38 +5,44 @@ var AddHostUseCase = require('../../useCase/hostManagement/AddHostUseCase');
 var DeleteHostUseCase = require('../../useCase/hostManagement/DeleteHostUseCase');
 var GetHostsUseCase = require('../../useCase/hostManagement/GetHostsUseCase');
 var GetHostContactsUseCase = require('../../useCase/hostManagement/GetHostContactsUseCase');
-var AddHostForContactsToMonitorUseCase = require('../../useCase/hostManagement/AddHostForContactsToMonitorUseCase');
 
 var MongoHostRepository = require('../../adapter/repository/mongoDB/MongoHostRepository');
 var hostRepository = new MongoHostRepository();
 var MongoHostContactsMapRepository = require('../../adapter/repository/mongoDB/MongoHostContactsMapRepository');
 var hostContactsMapRepository = new MongoHostContactsMapRepository();
 
-router.get('/getHosts', async function(req, res, next) {
-    let getHostsUseCase = new GetHostsUseCase(hostRepository);
-    let hosts = await getHostsUseCase.execute();
+var HostPresenter = require('../../presenter/HostPresenter');
+var HostPresenter = new HostPresenter();
+var hostViewModel = HostPresenter._hostViewModel;
+
+router.get('/getHosts', function(req, res, next) {
+    var entityContext = req.app.get('entityContext');
+    HostPresenter.getHosts(entityContext);
+    let hostsInfo = hostViewModel.getHostsInfo();
+
     if (hosts == 'error')
         res.sendStatus(500);
     else
-        res.send(hosts);
+        res.send(hostsInfo);
 });
 
 router.post('/addHost', async function(req, res, next) {
-    let addHostUseCase = new AddHostUseCase(hostRepository);
-    let addHostId = await addHostUseCase.execute(req.body);
+    var entityContext = req.app.get('entityContext');
 
-    let addHostForContactsToMonitorUseCase = new AddHostForContactsToMonitorUseCase(hostContactsMapRepository);
-    let addHostContactsMapResult = await addHostForContactsToMonitorUseCase.execute(addHostId, req.body.contactsId);
+    let addHostUseCase = new AddHostUseCase(entityContext, hostRepository, hostContactsMapRepository);
+    let addHostId = await addHostUseCase.execute(req.body);
     
-    if (addHostId == 'error' || addHostContactsMapResult == 'error')
+    if (addHostId == 'error')
         res.sendStatus(500);
     else
         res.sendStatus(200);
 });
 
 router.post('/deleteHost', async function(req, res, next) {
-    let deleteHostUseCase = new DeleteHostUseCase(hostRepository);
+    var entityContext = req.app.get('entityContext');
+    let deleteHostUseCase = new DeleteHostUseCase(entityContext, hostRepository);
     let result = await deleteHostUseCase.execute(req.body.hostId);
+
     if (result == 'error')
         res.sendStatus(500);
     else
@@ -44,8 +50,10 @@ router.post('/deleteHost', async function(req, res, next) {
 });
 
 router.get('/getHostContacts/:hostId', async function(req, res, next) {
-    let getHostContactsUseCase = new GetHostContactsUseCase(hostContactsMapRepository);
+    var entityContext = req.app.get('entityContext');
+    let getHostContactsUseCase = new GetHostContactsUseCase(entityContext, hostContactsMapRepository);
     let contacts = await getHostContactsUseCase.execute(req.params.hostId);
+
     if (contacts == 'error')
         res.sendStatus(500);
     else

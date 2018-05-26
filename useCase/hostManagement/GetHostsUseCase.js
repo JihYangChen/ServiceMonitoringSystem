@@ -1,24 +1,21 @@
 var Host = require('../../entity/Host');
+var HostDTO = require('../DTO/HostDTO');
 
 class GetHostsUseCase {
-    constructor(hostRepository) {
-        this._hostRepository = hostRepository;
+    constructor(context) {
+        this._context = context;
     }
 
-    async execute() {
-        let foundHostsFromDB = await this._hostRepository.getHosts();
-        let hostsInstancesList = [];
-        let hostsObjectList = []
+    execute() {
+        let hostsInstanceList = this._context.getHosts();
 
-        foundHostsFromDB.forEach(host => {
-            hostsInstancesList.push(new Host(host._id, host.displayName, host.host, host.status, host.statusStartTime, host.lastCheckTime, host.checkServiceOption));
+        let hostDTOList = [];
+        hostsInstanceList.forEach(host => {
+            let hostDTO = new HostDTO(host._id, host._displayName, host._host, host._status, host._statusStartTime, host._lastCheckTime, host._checkCommand.getCommandString());
+            hostDTOList.push(hostDTO);
         });
 
-        hostsInstancesList.forEach(host => {
-            hostsObjectList.push({"id": host._id, "displayName": host._displayName, "host": host._host, "status": host._status, "statusStartTime": host._statusStartTime, "lastCheckTime": host._lastCheckTime, "checkServiceOption": host._checkServiceOption});
-        });
-
-        return hostsObjectList;
+        return hostDTOList;
     }
 }
 

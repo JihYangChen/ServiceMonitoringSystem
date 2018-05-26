@@ -1,11 +1,14 @@
 class Monitor {
+    async monitorHosts(hosts) {
+        let monitoredHosts = [];
 
-    storeCommand(command) {
-        this._command = command;
-    }
-
-    async monitor() {
-        return await this._command.execute();
+        for (let host of hosts) {
+            let monitorResult = await host._checkCommand.execute();
+            host.setHostStatus(monitorResult.status);
+            monitoredHosts.push(host);
+        }
+        
+        return monitoredHosts;
     }
 }
 
