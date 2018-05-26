@@ -11,13 +11,13 @@ var hostRepository = new MongoHostRepository();
 var MongoHostContactsMapRepository = require('../../adapter/repository/mongoDB/MongoHostContactsMapRepository');
 var hostContactsMapRepository = new MongoHostContactsMapRepository();
 
-var HostController = require('../../controller/HostController');
-var hostController = new HostController();
-var hostViewModel = hostController._hostViewModel;
+var HostPresenter = require('../../presenter/HostPresenter');
+var HostPresenter = new HostPresenter();
+var hostViewModel = HostPresenter._hostViewModel;
 
 router.get('/getHosts', function(req, res, next) {
     var entityContext = req.app.get('entityContext');
-    hostController.getHosts(entityContext);
+    HostPresenter.getHosts(entityContext);
     let hostsInfo = hostViewModel.getHostsInfo();
 
     if (hosts == 'error')

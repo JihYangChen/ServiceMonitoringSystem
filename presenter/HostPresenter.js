@@ -1,7 +1,7 @@
 var GetHostsUseCase = require('../useCase/hostManagement/GetHostsUseCase');
 var HostViewModel = require('../viewModel/HostViewModel')
 
-class HostController {
+class HostPresenter {
     constructor() {
         this._hostViewModel = new HostViewModel();
     }
@@ -13,4 +13,4 @@ class HostController {
     }
 }
 
-module.exports = HostController;
+module.exports = HostPresenter;
